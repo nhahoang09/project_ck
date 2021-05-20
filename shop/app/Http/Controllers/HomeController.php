@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Slide;
+use App\Models\Product;
+use DateTime;
 use Illuminate\Http\Request;
+
 
 class HomeController extends Controller
 {
@@ -13,73 +18,35 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //
-        return view('frontend.homepage');
+        // slide
+        $slides = Slide::get();
+
+
+        // sản phẩm mới
+
+        $date = date('Y-m-01 H:i:s');
+        $arr_new_products = Product::where('is_feature',1)
+                                ->with(['prices' => function($q) {
+            $q-> where('status','=',1)
+                ;},
+                                       'promotions' => function($l) {
+            $l-> where('status','=',1);
+        }]
+        )->paginate(4);
+       //dd($arr_new_products);
+
+       // all
+        $products = Product::where('status',1)
+                            ->with(['prices' => function($q) {
+            $q-> where('status','=',1);
+        }]
+        )->paginate(8);
+        // category
+        $categories = Category::get();
+        //dd($categories);
+        return view('homepage',compact('slides','arr_new_products','products','categories'));
+
+        return view('layouts.header',compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

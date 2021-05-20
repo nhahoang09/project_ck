@@ -1,0 +1,8 @@
+.list-product-image {
+  list-style: none outside none;
+  margin-top: 15px;
+}
+.list-product-image li .product-image-group {
+  padding: 10px;
+  border: solid 1px #d2c8c8;
+}
