@@ -20,6 +20,7 @@
 @endpush
 
 @section('content')
+    
     {{-- form search --}}
     @include('admin.products._search')
 

@@ -1,4 +1,4 @@
-<x-guest-layout>
+{{-- <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
@@ -53,4 +53,49 @@
             </div>
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-guest-layout> --}}
+
+@extends('layouts.master')
+
+{{-- set page title --}}
+@section('title', 'Login')
+
+@section('content')
+
+@push('css')
+<link rel="stylesheet" href="/css/login.css">
+@endpush
+
+<div class="container">
+    <div id="content">
+
+        @csrf
+        <div class="login-form">
+            <form action="{{ route('login') }}" method="post" class="beta-form-checkout">
+                @csrf
+                <h4>Đăng nhập</h4>
+                <div class="space20">&nbsp;</div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Username"  type="email" name="email" :value="old('email')" required autofocus>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" type="password" name="password" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                </div>
+                <div class="clearfix">
+                    @if (Route::has('password.request'))
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                        {{ __('Forgot your password?') }}
+                    </a>
+                @endif
+                </div>
+            </form>
+
+        </div>
+
+    </div> <!-- #content -->
+</div> <!-- .container -->
+
+@endsection

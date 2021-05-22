@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategorySearchController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,13 +38,18 @@ Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
 
 });
 
+Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
+    Route::get('/search/{id}', [CategorySearchController::class, 'search'])->name('search');
+
+});
+
 // sử dụng check Authentication
 // Route::group(['middleware' => 'auth'], function () {
 // }
 // cart
 
 Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
-    Route::get('/cart-info', [CartController::class, 'getCartInfo'])->name('cart-info')->middleware('check_order_step_by_step');
+    Route::get('/cart-info', [CartController::class, 'getCartInfo'])->name('cart-info');//->middleware('check_order_step_by_step');
     Route::post('cart/{id}', [CartController::class, 'addCart'])->name('add-cart');
     Route::get('checkout', [CartController::class, 'checkout'])->name('checkout')->middleware('check_order_step_by_step');
     Route::post('checkout-complete', [CartController::class, 'checkoutComplete'])->name('checkout-complete');

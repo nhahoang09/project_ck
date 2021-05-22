@@ -16,13 +16,19 @@ class ProductController extends Controller
 
 
         $product = Product::with(['prices'=> function($q){
-            $q->where('status','=',1);
+            $q->where('status','=',1)
+            ->orderBy('price','asc')
+            ->first();
+
         },
         'promotions' => function($l) {
-            $l-> where('status','=',1);
-        }
+            $l-> where('status','=',1)
+            ->orderBy('discount','desc')
+            ->first();
+
+     }
         ])->findOrFail($id);
-        //dd($product);
+
         return view('products.detail', compact('product'));
     }
 }

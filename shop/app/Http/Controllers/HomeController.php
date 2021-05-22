@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Slide;
 use App\Models\Product;
-use DateTime;
+
+use Illuminate\View\View;
+
 use Illuminate\Http\Request;
 
 
@@ -18,8 +20,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // slide
-        $slides = Slide::get();
+
 
 
         // sản phẩm mới
@@ -41,12 +42,21 @@ class HomeController extends Controller
             $q-> where('status','=',1);
         }]
         )->paginate(8);
+
+        //dd($categories);
+        return view('homepage',compact('arr_new_products','products'));
+
+
+    }
+
+    public function compose(View $view)
+    {
+        // slide
+        $slides = Slide::get();
         // category
         $categories = Category::get();
-        //dd($categories);
-        return view('homepage',compact('slides','arr_new_products','products','categories'));
-
-        return view('layouts.header',compact('categories'));
+        $view->with('categories', $categories);
+        $view->with('slides', $slides);
     }
 
 }

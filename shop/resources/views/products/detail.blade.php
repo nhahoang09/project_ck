@@ -34,25 +34,25 @@
                 <div class="product-description">
                     <form action="{{ route('cart.add-cart', $product->id) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="price_id" value="">
+                        @foreach ($product->prices as $price)
+                        @foreach ($product->promotions as $promotion)
+
+                        <input type="hidden" name="price_id" value="{{ $price->id }}">
+                        <input type="hidden" name="promotion_id" value="{{ $promotion->id }}">
 
                         <div class="single-item-body">
                             <p class="single-item-title" style="font-size: 25px">{{$product->name  }}</p>
                             <div class="space20">&nbsp;</div>
 
                             <p class="single-item-price">
-                                @foreach ($product->prices as $price)
-                                @foreach ($product->promotions as $promotion)
                                     @php
                                         $money =  $price->price*(100 - $promotion->discount)/100;
                                     @endphp
                                     <span>{{ number_format($money)}} VND</span>
-
-                                @endforeach
-
-                                @endforeach
                             </p>
                         </div>
+                        @endforeach
+                        @endforeach
                         <div class="clearfix"></div>
                         <div class="space20">&nbsp;</div>
                         <div class="single-item-desc">
@@ -61,10 +61,10 @@
                         <div class="space20">&nbsp;</div>
                         <div class="product-quantity">
                             <p>Quantity :
-
                                 <span><input type="number" name="quantity" required></span>
                             </p>
-                            <a class="add-to-cart" href="#"><i class="fa fa-shopping-cart"></i></a>
+                            {{-- <a class="add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></a> --}}
+                            <button type="submit">Add Cart</button>
 
                         </div>
                     </form>

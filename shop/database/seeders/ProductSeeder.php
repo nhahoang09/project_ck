@@ -100,19 +100,20 @@ class ProductSeeder extends Seeder
         $quantities = [20, 40, 60, 80, 100, 200];
 
         $listThumbnails = [
-            '54eaf93713081_-_07-germany-tuna.jpg',
-            '111.jpg',
-            '234.jpg',
-            '544bc48782741.png',
-            '1234.jpg',
-            '40819_food_pizza.jpg',
-            '210215-banh-sinh-nhat-rau-cau-body- (6).jpg',
-            '50020041-combo-20-banh-su-que-pho-mai-9.jpg',
-            '1430967449-pancake-sau-rieng-6.jpg',
-            '1434429117-banh-su-kem-chien-20.jpg',
+            'frontend/image/product/54eaf93713081_-_07-germany-tuna.jpg',
+            'frontend/image/product/all1).jpg',
+            'frontend/image/product/234.jpg',
+            'frontend/image/product/544bc48782741.png',
+            'frontend/image/product/1234.jpg',
+            'frontend/image/product/40819_food_pizza.jpg',
+            'frontend/image/product/210215-banh-sinh-nhat-rau-cau-body- (6).jpg',
+            'frontend/image/product/50020041-combo-20-banh-su-que-pho-mai-9.jpg',
+            'frontend/image/product/1430967449-pancake-sau-rieng-6.jpg',
+            'frontend/image/product/1434429117-banh-su-kem-chien-20.jpg',
 
 
         ];
+        $is_feature = [0,1];
 
         for ($i = 0; $i <30 ; $i++) {
             $product = [
@@ -121,7 +122,7 @@ class ProductSeeder extends Seeder
                 'thumbnail' => $listThumbnails[array_rand($listThumbnails)],
                 'status' => 1,
                 'quantity' => $quantities[array_rand($quantities)],
-                'is_feature' => 0,
+                'is_feature' =>$is_feature[array_rand($is_feature)] ,
                 'category_id' => $categories[array_rand($categories)],
             ];
             $saveProduct = Product::create($product);
@@ -133,13 +134,13 @@ class ProductSeeder extends Seeder
                 ];
                 ProductDetail::create($productDetail);
 
-            // save product_images
+            // // save product_images
 
-                $productImage = [
-                    'url' => $listThumbnails[array_rand($listThumbnails)],
-                    'product_id' => $saveProduct->id,
-                ];
-                Thumbnail::create($productImage);
+            //     $productImage = [
+            //         'url' => $listThumbnails[array_rand($listThumbnails)],
+            //         'product_id' => $saveProduct->id,
+            //     ];
+            //     Thumbnail::create($productImage);
 
 
         }

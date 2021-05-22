@@ -30,6 +30,21 @@
             @enderror
         </div>
 
+         <div class="form-group mb-5">
+            <label for="">Category</label>
+            <select name="category_id" class="form-control">
+                <option value=""></option>
+                @if(!empty($categories))
+                    @foreach ($categories as $categoryId => $categoryName)
+                        <option value="{{ $categoryId }}" {{ old('category_id', $product->category_id) == $categoryId ? 'selected' : ''  }}>{{ $categoryName }}</option>
+                    @endforeach
+                @endif
+            </select>
+            @error('category_id')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
         <div class="form-group mb-5">
             <label for="">Product Thumbnail</label>
             <img src="{{ asset($product->thumbnail) }}" alt="{{ $product->name }}" class="img-fluid">
@@ -64,44 +79,30 @@
         </div>
 
         <div class="form-group mb-5">
-            <label for="">Category</label>
-            <select name="category_id" class="form-control">
-                <option value=""></option>
-                @if(!empty($categories))
-                    @foreach ($categories as $categoryId => $categoryName)
-                        <option value="{{ $categoryId }}" {{ old('category_id', $product->category_id) == $categoryId ? 'selected' : ''  }}>{{ $categoryName }}</option>
-                    @endforeach
-                @endif
-            </select>
-            @error('category_id')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+            <label for="">Product Status</label>
+           <div>
+                <input type="radio" name="status" value="0" {{ $product->status==0 ? 'checked' : '' }}>
+                <label for="">Private</label>
+                <input type="radio" name="status" value="1" {{ $product->status==1 ? 'checked' : '' }}>
+                <label for="">Public</label>
+            </div>
         </div>
 
-        {{-- <div class="form-group mb-5">
-            <label for="">Product Image</label>
-            <input type="file" name="new_url[]" multiple class="form-control"> --}}
+         <div class="form-group mb-5">
+            <label for="">Product Is_Feature</label>
+           <div>
+                <input type="radio" name="is_feature" value="0" {{ $product->is_feature==0 ? 'checked' : '' }}>
+                <label for="">Old</label>
+                <input type="radio" name="is_feature" value="1" {{ $product->is_feature==1 ? 'checked' : '' }}>
+                <label for="">New</label>
+            </div>
+        </div>
 
-            {{-- show all image of table product_images --}}
-            {{-- @if (!empty($product->product_images))
-                <ul class="row list-product-image">
-                    @foreach ($product->product_images as $url)
-                        <li class="col-4">
-                            <div class="product-image-group">
-                                <img src="{{ asset($url->url) }}" alt="image" class="img-fluid">
-                                <input type="hidden" name="url[]" value="{{ $url->url }}">
-                                <button type="button" class="btn btn-danger form-control mt-1" onclick="$(this).closest('li').remove()">Remove Image</button>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
+        
 
-            @error('url')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div> --}}
+       
 
+      
         <div class="form-group">
             <a href="{{ route('admin.product.index') }}" class="btn btn-secondary">List Post</a>
             <button type="submit" class="btn btn-primary">Update</button>

@@ -1,3 +1,10 @@
+@extends('layouts.master')
+
+{{-- set page title --}}
+@section('title', 'Login')
+
+@section('content')
+
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
@@ -57,3 +64,6 @@
         </form>
     </x-auth-card>
 </x-guest-layout>
+
+
+@endsection

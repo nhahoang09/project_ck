@@ -16,10 +16,10 @@ class SlideSeeder extends Seeder
     {
         //
         $listSlides = [
-            'public/frontend/image/slide/banner1.jpg',
-            'public/frontend/image/slide/banner2.jpg',
-            'public/frontend/image/slide/banner3.jpg',
-            'public/frontend/image/slide/banner4.jpg',
+            'frontend/image/slide/banner1.jpg',
+            'frontend/image/slide/banner2.jpg',
+            'frontend/image/slide/banner3.jpg',
+            'frontend/image/slide/banner4.jpg',
 
         ];
 

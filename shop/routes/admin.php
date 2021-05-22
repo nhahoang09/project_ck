@@ -61,6 +61,8 @@ Route::group(['middleware' => ['check_login_admin'] , 'as' => 'admin.'], functio
         // route for module Price
         Route::group(['prefix' => 'price', 'as' => 'price.'], function () {
             Route::get('/list', [PriceController::class, 'index'])->name('index');
+            Route::get('/create', [PriceController::class, 'create'])->name('create');
+            Route::post('/store', [PriceController::class, 'store'])->name('store');
             Route::get('/show/{id}', [PriceController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [PriceController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PriceController::class, 'update'])->name('update');
@@ -70,6 +72,8 @@ Route::group(['middleware' => ['check_login_admin'] , 'as' => 'admin.'], functio
         // route for module Promotion
         Route::group(['prefix' => 'promotion', 'as' => 'promotion.'], function () {
             Route::get('/list', [PromotionController::class, 'index'])->name('index');
+            Route::get('/create', [PromotionController::class, 'create'])->name('create');
+            Route::post('/store', [PromotionController::class, 'store'])->name('store');
             Route::get('/show/{id}', [PromotionController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [PromotionController::class, 'edit'])->name('edit');
             Route::put('//update/{id}', [PromotionController::class, 'update'])->name('update');

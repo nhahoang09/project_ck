@@ -52,14 +52,14 @@ class Product extends Model
     }
 
 
-    public function latestPrice()
-    {
-        $currentdate = date('Y-m-01 H:i:s');
+    // public function latestPrice()
+    // {
+    //     $currentdate = date('Y-m-01 H:i:s');
 
-        return $this->hasOne(Price::class)
-            ->where('end_date', '>=', $currentdate)
-            ->where('status',1)
-            ->first();
-    }
+    //     return $this->hasOne(Price::class)
+    //         ->where('end_date', '>=', $currentdate)
+    //         ->where('status',1)
+    //         ->first();
+    // }
 
 }

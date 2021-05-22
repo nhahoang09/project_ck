@@ -18,8 +18,7 @@ class ProductController extends Controller
 {
    //
     private const FOLDER_UPLOAD_PRODUCT_THUMBNAIL = 'frontend/image/product';
-   // private const FOLDER_UPLOAD_PRODUCT_CONTENT = 'products/contents';
-
+  
 
     /**
      * Display a listing of the resource.
@@ -30,20 +29,17 @@ class ProductController extends Controller
     {
         // get list data of table products
         $products = Product::with('category');
-
         // add new param to search
         // search post name
         if (!empty($request->name)) {
             $products = $products->where('name', 'like', '%' . $request->name . '%');
         }
-
         // search category_id
         if (!empty($request->category_id)) {
             $products = $products->where('category_id', $request->category_id);
         }
-
         // order ID desc
-        $products = $products->orderBy('id', 'desc');
+       // $products = $products->orderBy('id', 'desc');
 
         // pagination
         $products = $products->paginate(Product::PAGE_LIMIT);
@@ -85,7 +81,6 @@ class ProductController extends Controller
 
             // upload file to server
             $image->move(self::FOLDER_UPLOAD_PRODUCT_THUMBNAIL, $fileName);
-
             // set filename
             $thumbnailPath = self::FOLDER_UPLOAD_PRODUCT_THUMBNAIL . '/' . $fileName;
         }
@@ -97,47 +92,21 @@ class ProductController extends Controller
             'quantity' => $request->quantity,
             'category_id' => $request->category_id,
         ];
-
-
-
+        //dd($dataInsert);
         DB::beginTransaction();
-
         try {
             // insert into table products
             $product = Product::create($dataInsert);
 
-            // insert into table product_details
-            // todo
-            $productDetail = new ProductDetail([
-                'content' => $request->content
-            ]);
-
-            $product->product_detail()->save($productDetail);
-
-            // // insert data for table product_images
-            // if (!empty($listProductImages)) {
-            //     foreach ($listProductImages as $url) {
-            //         $dataProductImageSave = [
-            //             'url' => $url,
-            //             'product_id' => $product->id,
-            //         ];
-            //         ProductImage::create($dataProductImageSave);
-            //     }
-            // }
-
-            // save data for table prices
-            $dataPrice = [
-                'price' => $request->price,
-                'product_id' => $product ->id,
-                'begin_date' => date('Y-m-d 00:00:00', strtotime($request->begin_date)),
-                'end_date' => date('Y-m-d 00:00:00', strtotime($request->end_date)),
-                'status' => $request->status,
-            ];
-
-            Price::create($dataPrice);
-
+            //insert into table product_details
+            if(!empty($request->content)){
+                $productDetail= new ProductDetail([
+                    'content'=>$request->content,
+                ]);
+                //dd($productDetail);
+                $product->product_detail()->save($productDetail);
+            }
             DB::commit();
-
             // success
             return redirect()->route('admin.product.index')->with('success', 'Insert Product Successful!');
         } catch (\Exception $ex) {
@@ -185,35 +154,24 @@ class ProductController extends Controller
         $product = Product::with('product_detail')
             ->findOrFail($id);
 
-        $productDetailId = $product->post_detail ? $product->product_detail->id : null;
+        $productDetailId = $product->product_detail ? $product->product_detail->id : null;
+        //dd( $productDetailId);
         $thumbnailOld = $product->thumbnail;
 
-        // get list product image from DB
-        // $listProductImageDB = [];
-        // if (!empty($product->product_images)) {
-        //     foreach ($product->product_images as $img) {
-        //         $listProductImageDB[] = $img->url;
-        //     }
-        // }
-
-        // get list product image from FORM
-        // $listProductImageForm = [];
-        // if (!empty($request->url)) {
-        //     foreach ($request->url as $img) {
-        //         $listProductImageForm[] = $img;
-        //     }
-        // }
 
         // update data for table products
         $product->name = $request->name;
         $product->description = $request->description;
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
+        $product->status = $request->status;
+        $product->is_feature = $request->is_feature;
+
 
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')
             && $request->file('thumbnail')->isValid()) {
-            // Nếu có thì thục hiện lưu trữ file vào public/thumbnail
+            // Nếu có thì thục hiện lưu trữ file vào public/frontent/image/product 
             $image = $request->file('thumbnail');
             $extension = $request->thumbnail->extension();
             $extension = strtolower($extension); // convert string to lowercase
@@ -227,53 +185,27 @@ class ProductController extends Controller
             Log::info('thumbnailPath: ' . $thumbnailPath);
         }
 
-        // get all file upload for table product_images (NEW FILE UPLOAD)
-        // $files = $request->new_url;
-        // $listProductImageUpload = [];
-        // if (!empty($files)) {
-        //     foreach ($files as $file) {
-        //         $extension = $file->extension();
-        //         $extension = strtolower($extension); // convert string to lowercase
-        //         $fileName = 'product_image_' . time() . rand() . '.' . $extension;
-
-        //         // upload file to server
-        //         $thumbnailPath = $file->move(self::FOLDER_UPLOAD_PRODUCT_IMAGE, $fileName);
-
-        //         // set filename into array
-        //         $listProductImageUpload[] = self::FOLDER_UPLOAD_PRODUCT_IMAGE . '/' . $fileName;
-        //     }
-        // }
-
         DB::beginTransaction();
 
         try {
-            // update data for table posts
+            // update data for table product
             $product->save();
 
-            $dataDetailProduct = [
-                'content' => $request->content,
-                'product_id' => $id,
-            ];
-
-            // create or update data for table product_details
-            if (!$productDetailId) { // create
-                $productDetail = new ProductDetail($dataDetailProduct);
-                $productDetail->save();
-            } else { // update
-                ProductDetail::find($productDetailId)
-                    ->update($dataDetailProduct);
+            if(!empty($request->content)){
+                $dataDetailProduct=[
+                    'content'=>$request->content,
+                    'product_id'=>$id,
+                ];
+                //dd( $dataDetailProduct);
+                // create or update data for table post_details
+                if (!$productDetailId) { // create
+                    $productDetail = new ProductDetail($dataDetailProduct);
+                    $productDetail->save();
+                } else { // update
+                    ProductDetail::find($productDetailId)
+                        ->update($dataDetailProduct);
+                }
             }
-
-            // create data for table product_images (with image new upload)
-            // if (!empty($listProductImageUpload)) {
-            //     foreach ($listProductImageUpload as $img) {
-            //         $dataProductImageSave = [
-            //             'url' => $img,
-            //             'product_id' => $product->id,
-            //         ];
-            //         ProductImage::create($dataProductImageSave);
-            //     }
-            // }
 
             DB::commit();
 
@@ -283,18 +215,6 @@ class ProductController extends Controller
                 File::delete(public_path($thumbnailOld));
             }
 
-            // compare data of 2 array (listProductImageForm, listProductImageDB) to get new an array (difference between 2 array)
-            // $listProductImageDiff = array_diff($listProductImageDB, $listProductImageForm);
-            // if (!empty($listProductImageDiff)) {
-            //     foreach ($listProductImageDiff as $diff) {
-            //         ProductImage::where('url', $diff)
-            //             ->delete();
-            //         if (File::exists(public_path($diff))) {
-            //             File::delete(public_path($diff));
-            //         }
-            //     }
-            // }
-
             // success
             return redirect()->route('admin.product.index')->with('success', 'Update Product successful!');
         } catch (\Exception $ex) {
@@ -303,7 +223,6 @@ class ProductController extends Controller
             return redirect()->back()->with('error', $ex->getMessage());
         }
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -317,49 +236,16 @@ class ProductController extends Controller
         try {
             $product = Product::with('product_detail')
                 ->findOrFail($id);
-
-            // get list product image into table product_images with product_id = $id
-            // $listProductImages = [];
-            // if (!empty($product->product_images)) {
-            //     foreach ($product->product_images as $value) {
-            //         $listProductImages[] = $value->url;
-            //     }
-            // }
-
-            // get thumbnail
             $thumbnail = $product->thumbnail;
-
             // delete data of table product_detail
             $product->product_detail->delete();
-
-            // delete data of table product_images
-            // ProductImage::where('product_id', $id)
-            //     ->delete();
-
             // delete data of table products
             $product->delete();
-
             DB::commit();
-
-            /**
-             * Now use SoftDelete so can ignore function delete file
-             */
-            // // DELETE record into table products OK then delete thumbnail file
-            // if (File::exists(public_path($thumbnail))) {
-            //     File::delete(public_path($thumbnail));
-            // }
-
-            /**
-             * Now use SoftDelete so can ignore function delete file
-             */
-            // // DELETE record into table product_images OK then delete url
-            // if (!empty($listProductImages)) {
-            //     foreach ($listProductImages as $img) {
-            //         if (File::exists(public_path($img))) {
-            //             File::delete(public_path($img));
-            //         }
-            //     }
-            // }
+            // DELETE record into table products OK then delete thumbnail file
+            if (File::exists(public_path($thumbnail))) {
+                File::delete(public_path($thumbnail));
+            }
 
             // success
             return redirect()->route('admin.product.index')->with('success', 'Delete Product successful!');

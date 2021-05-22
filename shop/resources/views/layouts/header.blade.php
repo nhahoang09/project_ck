@@ -11,9 +11,28 @@
                 </div>
                 <div class="pull-right auto-width-right">
                     <ul class="top-details menu-beta l-inline">
-                        <li><a href="#"><i class="fa fa-user"></i>Tài khoản</a></li>
-                        <li><a href="{{ route('register') }}">Đăng kí</a></li>
-                        <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                        @auth
+                            @if(Route::has('login'))
+
+                                 <li>
+                                    <a href="#">Tài khoản: ({{Auth::user()->name}})<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                </li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <li class="" >
+                                        <a href=""><button class="" style="background-color: #ffffff; " type="submit">Đăng xuất</button></a>
+                                </form>
+                                {{-- <li><a href="{{ route('logout') }}">Đăng nhập</a></li> --}}
+                            @endif
+                        @else
+                            @if (Route::has('login'))
+                                <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                            @endif
+                            @if (Route::has('register'))
+                                <li><a href="{{ route('register') }}">Đăng ký</a></li>
+                             @endif
+
+                        @endauth
                     </ul>
                 </div>
                 <div class="clearfix"></div>
@@ -105,7 +124,7 @@
                         <li><a href="#">Sản phẩm</a>
                             <ul class="sub-menu">
                                 @foreach ($categories as $category)
-                                    <li><a href="#">{{ $category['name'] }}</a></li>
+                                    <li><a href="{{  route('category.search', $category->id) }}">{{ $category->name }}</a></li>
                                 @endforeach
                             </ul>
                         </li>
