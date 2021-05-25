@@ -35,6 +35,7 @@ require __DIR__.'/auth.php';
 
 Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
     Route::get('/detail/{id}', [ProductController::class, 'detail'])->name('detail');
+    Route::get('/search', [ProductController::class, 'search'])->name('search');
 
 });
 
@@ -51,6 +52,10 @@ Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
 Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
     Route::get('/cart-info', [CartController::class, 'getCartInfo'])->name('cart-info');//->middleware('check_order_step_by_step');
     Route::post('cart/{id}', [CartController::class, 'addCart'])->name('add-cart');
+
+    Route::post('/update-cart/{id}',[CartController::class,'updateCart'])->name('update-cart');
+    Route::get('/remove-cart/{id}',[CartController::class,'removeCart'])->name('remove-cart');
+
     Route::get('checkout', [CartController::class, 'checkout'])->name('checkout')->middleware('check_order_step_by_step');
     Route::post('checkout-complete', [CartController::class, 'checkoutComplete'])->name('checkout-complete');
     Route::post('send-verify-code', [CartController::class, 'sendVerifyCode'])->middleware(['auth'])->name('send-verify-code');

@@ -15,20 +15,32 @@ class ProductController extends Controller
 
 
 
-        $product = Product::with(['prices'=> function($q){
-            $q->where('status','=',1)
-            ->orderBy('price','asc')
-            ->first();
+    //     $product = Product::with(['prices'=> function($q){
+    //         $q->where('status','=',1)
+    //         ->orderBy('price','asc')
+    //         ->first();
 
-        },
-        'promotions' => function($l) {
-            $l-> where('status','=',1)
-            ->orderBy('discount','desc')
-            ->first();
+    //     },
+    //     'promotions' => function($l) {
+    //         $l-> where('status','=',1)
+    //         ->orderBy('discount','desc')
+    //         ->first();
 
-     }
-        ])->findOrFail($id);
+    //  }
+    //     ])->findOrFail($id);
+        $product = Product::findOrFail($id);
 
-        return view('products.detail', compact('product'));
+        $product_relates = Product::where('category_id',$product->category_id)
+                                ->where('id','!=',$id)->get();
+        return view('products.detail', compact('product','product_relates'));
     }
+
+    public function search(Request $request)
+    {
+        if (!empty($request->key)) {
+            $products = Product::where('name', 'like', '%' . $request->key . '%')->get();
+        }
+        return view('search', compact('products'));
+    }
+
 }

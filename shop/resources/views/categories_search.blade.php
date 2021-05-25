@@ -36,13 +36,13 @@
                                 <div class="single-item">
                                     <div class="single-item-header">
                                         <a href="{{ route('product.detail', $product->id) }}"><img
-                                            src="frontend/image/product/{{ $product->thumbnail }}" alt=""
+                                            src="{{ $product->thumbnail }}" alt=""
                                             height="250px"></a>
                                     </div>
                                     <div class="single-item-body">
                                         <p class="single-item-title">{{ $product->name }}</p>
                                         <p class="single-item-price">
-                                            @php
+                                            {{-- @php
                                             $prices = $product['prices'];
                                             $promotions = $product['promotions'];
                                             @endphp
@@ -54,7 +54,19 @@
                                             $money = $price['price'] * (100 - $promotion['discount'])/100;
                                             @endphp
                                             <span class="flash-sale"> {{ $money}}</span>
-                                            @endforeach
+                                            @endforeach --}}
+                                            @php
+                                            // get 1 price
+                                            $get_price = $product->getPrice();
+                                            $price = $get_price->price;
+                                            // get 1 promotion
+                                            $get_promotion = $product->getPromotion();
+                                            $promotion = $get_promotion->discount;
+                                            // money
+                                            $money = $price * (100 - $promotion)/100;
+                                            @endphp
+                                            <span class="flash-del"> {{number_format($price) }} </span>
+                                            <span class="flash-sale">{{number_format($money) }}</span>
                                         </p>
                                     </div>
                                     <div class="single-item-caption">
@@ -73,7 +85,7 @@
                     <div class="space50">&nbsp;</div>
 
                     <div class="beta-products-list">
-                        <h4>Sản phẩm tương tự</h4>
+                        <h4>Sản phẩm khác</h4>
                         <div class="beta-products-details">
                             <p class="pull-left">Tìm thấy {{ count($products_other) }} sản phẩm</p>
                             <div class="clearfix"></div>
@@ -84,13 +96,13 @@
                                 <div class="single-item">
                                     <div class="single-item-header">
                                         <a href="{{ route('product.detail', $pr->id) }}"><img
-                                            src="frontend/image/product/{{ $pr->thumbnail }}" alt=""
+                                            src="{{ $pr->thumbnail }}" alt=""
                                             height="250px"></a>
                                     </div>
                                     <div class="single-item-body">
                                         <p class="single-item-title">{{ $pr->name }}</p>
                                         <p class="single-item-price">
-                                            @php
+                                            {{-- @php
                                             $prices = $pr['prices'];
                                             $promotions = $pr['promotions'];
                                             @endphp
@@ -102,7 +114,19 @@
                                             $money = $price['price'] * (100 - $promotion['discount'])/100;
                                             @endphp
                                             <span class="flash-sale"> {{ $money}}</span>
-                                            @endforeach
+                                            @endforeach --}}
+                                            @php
+                                            // get 1 price
+                                            $get_price = $pr->getPrice();
+                                            $price = $get_price->price;
+                                            // get 1 promotion
+                                            $get_promotion = $pr->getPromotion();
+                                            $promotion = $get_promotion->discount;
+                                            // money
+                                            $money = $price * (100 - $promotion)/100;
+                                            @endphp
+                                            <span class="flash-del"> {{number_format($price) }} </span>
+                                            <span class="flash-sale">{{number_format($money) }}</span>
                                         </p>
                                     </div>
                                     <div class="single-item-caption">

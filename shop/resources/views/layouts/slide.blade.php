@@ -21,7 +21,7 @@
                                     data-bgposition="center center" data-bgrepeat="no-repeat"
                                     data-lazydone="undefined" src="{{ $slide -> url }}"
                                     data-src="{{ $slide -> url }}"
-                                    style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url('frontend/image/slide/{{ $slide -> url }}'); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;">
+                                    style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url('{{ $slide -> url }}'); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;">
                                 </div>
                             </div>
 

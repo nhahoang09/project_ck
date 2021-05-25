@@ -25,26 +25,30 @@ class HomeController extends Controller
 
         // sản phẩm mới
 
-        $date = date('Y-m-01 H:i:s');
-        $arr_new_products = Product::where('is_feature',1)
-                                ->with(['prices' => function($q) {
-            $q-> where('status','=',1)
-                ;},
-                                       'promotions' => function($l) {
-            $l-> where('status','=',1);
-        }]
-        )->paginate(4);
-       //dd($arr_new_products);
+        //$date = date('Y-m-01 H:i:s');
 
+        // $new_products = Product::where('is_feature',1)
+        //                             ->with(['prices' => function($q) {
+        //     $q-> where('status','=',1);},
+        //                             'promotions' => function($l) {
+        //     $l-> where('status','=',1);
+        // }])->get()->take(4);
+       //;
+
+        $new_products = Product::where('is_feature',1)
+    
+                                ->take(4)->get();
+       //dd($new_products);
        // all
+        // $products = Product::where('status',1)
+        //                     ->with(['prices' => function($q) {
+        //     $q-> where('status','=',1);
+        // }]
+        // )
         $products = Product::where('status',1)
-                            ->with(['prices' => function($q) {
-            $q-> where('status','=',1);
-        }]
-        )->paginate(8);
-
-        //dd($categories);
-        return view('homepage',compact('arr_new_products','products'));
+        ->where('is_feature',0)
+        ->paginate(8);
+        return view('homepage',compact('new_products','products'));
 
 
     }

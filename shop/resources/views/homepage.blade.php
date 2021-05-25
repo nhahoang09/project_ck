@@ -15,59 +15,62 @@
                             <h4>Sản phẩm mới</h4>
 
                             <div class="beta-products-details">
-                                <p class="pull-left"> Tìm thấy {{ count($arr_new_products) }} sản phẩm</p>
+                                <p class="pull-left"> Tìm thấy {{count($new_products) }} sản phẩm</p>
                                 <div class="clearfix"></div>
                             </div>
 
                             <div class="row">
-                                @foreach ( $arr_new_products as $new_product)
+                                @foreach ( $new_products as $new_product)
                                 <div class="col-sm-3">
                                     <div class="single-item">
+
                                         <div class="ribbon-wrapper">
                                             <div class="ribbon sale">Sale</div>
                                         </div>
                                         <div class="single-item-header">
                                             <a href="{{ route('product.detail', $new_product-> id) }}"><img
-                                                    src="frontend/image/product/{{ $new_product-> thumbnail }}" alt=""
+                                                    src="{{ $new_product->thumbnail }}" alt=""
                                                     height="250px"></a>
                                         </div>
                                         <div class="single-item-body">
-                                            <p class="single-item-title">{{ $new_product-> name }}</p>
+                                            <p class="single-item-title">{{ $new_product->name }}</p>
                                             <p class="single-item-price">
                                                 @php
-                                                $prices = $new_product['prices'];
-                                                $promotions = $new_product['promotions'];
+                                                // get 1 price
+                                                $get_price = $new_product->getPrice();
+                                                $price = $get_price->price;
+                                                // get 1 promotion
+                                                $get_promotion = $new_product->getPromotion();
+                                                $promotion = $get_promotion->discount;
+                                                // money
+                                                $money = $price * (100 - $promotion)/100;
                                                 @endphp
-                                                @foreach ($prices as $price)
-                                                <span class="flash-del"> {{$price['price'] }} </span>
-                                                @endforeach
-                                                @foreach ($promotions as $promotion)
-                                                @php
-                                                $money = $price['price'] * (100 - $promotion['discount'])/100;
-                                                @endphp
-                                                <span class="flash-sale"> {{ $money}}</span>
-                                                @endforeach
+                                                <span class="flash-del"> {{number_format($price) }} </span>
+                                                <span class="flash-sale">{{number_format($money) }}</span>
                                             </p>
                                         </div>
                                         <div class="single-item-caption">
-                                            <a class="add-to-cart pull-left" href="{{ route('cart.add-cart', $new_product->id) }}"><i
+                                            <a class="add-to-cart pull-left" href="{{ route('cart.add-cart',$new_product->id) }}"><i
                                                     class="fa fa-shopping-cart"></i></a>
                                             <a class="beta-btn primary" href="{{ route('product.detail', $new_product->id) }}">Details <i
                                                     class="fa fa-chevron-right"></i></a>
                                             <div class="clearfix"></div>
                                         </div>
+                                        <div class="space40">&nbsp;</div>
                                     </div>
                                 </div>
+
                                 @endforeach
 
+
                             </div>
-                            <div class="row">{{ $arr_new_products ->links() }}</div>
+
                         </div> <!-- .beta-products-list -->
 
                         <div class="space50">&nbsp;</div>
 
                         <div class="beta-products-list">
-                            <h4>Tất cả các sản phẩm</h4>
+                            <h4>Sản phẩm bán chạy</h4>
                             <div class="beta-products-details">
                                 <p class="pull-left">Tìm thấy {{ count($products) }} sản phẩm </p>
                                 <div class="clearfix"></div>
@@ -82,33 +85,33 @@
                                         </div>
 
                                         <div class="single-item-header">
-                                            <a href="product.html"><img
-                                                    src="frontend/image/product/{{ $product-> thumbnail }}" alt=""
+                                            <a href="{{ route('product.detail', $product->id) }}"><img
+                                                    src="{{ $product->thumbnail }}" alt=""
                                                     height="250px"></a>
                                         </div>
 
                                         <div class="single-item-body">
-                                            <p class="single-item-title">{{ $product-> name }}</p>
+                                            <p class="single-item-title">{{ $product->name }}</p>
                                             <p class="single-item-price">
                                                 @php
-                                                $prices = $new_product['prices'];
-                                                //$promotions = $new_product['promotions'];
+                                                // get 1 price
+                                                $get_price = $product->getPrice();
+                                                $price = $get_price->price;
+                                                // get 1 promotion
+                                                $get_promotion = $product->getPromotion();
+                                                $promotion = $get_promotion->discount;
+                                                // money
+                                                $money = $price * (100 - $promotion)/100;
+
                                                 @endphp
-                                                @foreach ($prices as $price)
-                                                    <span class="flash-del"> {{$price['price'] }} </span>
-                                                @endforeach
-                                                {{-- @foreach ($promotions as $promotion)
-                                                    @php
-                                                         $money = $price['price']  * (100 - $promotion['discount'])/100;
-                                                    @endphp
-                                                    <span class="flash-sale"> {{ $money}}</span>
-                                                @endforeach --}}
+                                                <span class="flash-del"> {{number_format($price) }} </span>
+                                                <span class="flash-sale">{{number_format($money) }}</span>
                                             </p>
                                         </div>
                                         <div class="single-item-caption">
-                                            <a class="add-to-cart pull-left" href=""><i
+                                            <a class="add-to-cart pull-left" href="{{ route('cart.add-cart',$product->id) }}"><i
                                                     class="fa fa-shopping-cart"></i></a>
-                                            <a class="beta-btn primary" href="product.html">Details <i
+                                            <a class="beta-btn primary" href="{{ route('product.detail', $product->id) }}">Details <i
                                                     class="fa fa-chevron-right"></i></a>
                                             <div class="clearfix"></div>
                                         </div>

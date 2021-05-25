@@ -18,8 +18,6 @@ class CategorySearchController extends Controller
         $products = Product::where('category_id',$id)->get();
 
         $products_other = Product::where('category_id','!=',$id)->paginate(3);
-
-
         return view('categories_search', compact('products','category','categories','products_other'));
     }
 }

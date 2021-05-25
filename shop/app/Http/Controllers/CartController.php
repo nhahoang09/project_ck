@@ -16,6 +16,7 @@ use App\Utils\CommonUtil;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Arr;
 
 class CartController extends Controller
 {
@@ -24,7 +25,6 @@ class CartController extends Controller
         //get data from SESSION
         $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
         //dd($carts);
-
 
         // validate ID of table product ? available TRUE | FALSE
         // check quantity of products.quantity compare with order_detail.quantity
@@ -36,17 +36,13 @@ class CartController extends Controller
             'id' => $id,
             'quantity' => $request->quantity,
             'price_id' => $request->price_id,
-            'promotion_id' => $request->promotion_id,
+            'promotion_id' => $request->promotion_id
         ];
 
         $carts[$id] = $newProduct;
-
-
         // set data for SESSION
         session(['carts' => $carts]);
 
-        //$data = Session::all();
-        //dd($data);
 
         return redirect()->route('cart.cart-info')
             ->with('success', 'Add Product to Cart successful!');
@@ -54,13 +50,12 @@ class CartController extends Controller
 
     public function getCartInfo(Request $request)
     {
-        $data = [];
 
         //get cart info from SESSION
         $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
-       // dd($carts);
-
-        $data['carts'] = $carts;
+        //dd($carts);
+        // $data['carts'] = $carts;
+        $total = 0;
 
         $products = [];
         if (!empty($carts)) {
@@ -69,28 +64,52 @@ class CartController extends Controller
             foreach ($carts as $cart) {
                 $listProductId[] = $cart['id'];
             }
+            //dd( $listProductId);
+
             // get data product from list product id
             $products = Product::whereIn('id', $listProductId)
-            ->with(['prices'=> function($q){
-                $q->where('status','=',1)
-                ->orderBy('price','desc')
-                ->first();
-            },
-            'promotions' => function($l) {
-                $l-> where('status','=',1)
-                ->orderBy('discount','desc')
-                ->first();
-            }
-            ])
             ->get();
 
             // add step by step to SESSION
             //session(['step_by_step' => 1]);
         }
         //dd($products);
+       return view('carts.cart_info', compact('products','carts','total'));
 
-        return view('carts.cart_info', compact('products'));
     }
+
+    public function updateCart($id,Request $request)
+    {
+        //get data from SESSION
+        $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
+        //dd($carts);
+       // $data['carts'] = $carts;
+       $updateProduct = [
+            'quantity' => $request->quantity,
+        ];
+        $carts[$id]['quantity'] =  $updateProduct['quantity'];
+        //dd($carts[$id]);
+        session(['carts' => $carts]);
+        //dd($carts);
+        //return view('carts.cart_info', compact('carts'));
+        return redirect()->route('cart.cart-info');
+    }
+    public function removeCart($id,Request $request)
+    {
+        //get data from SESSION
+        $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
+        //dd($carts);
+
+        //delete item
+        Arr::pull($carts, $id);
+
+        // store session
+        session(['carts' => $carts]);
+        //dd($carts);
+        return redirect()->route('cart.cart-info');
+    }
+
+
 
 
 
