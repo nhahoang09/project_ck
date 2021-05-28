@@ -11,7 +11,7 @@ use App\Mail\SendVerifyCode;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderVerify;
-use App\Models\Price;
+
 use App\Utils\CommonUtil;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -109,162 +109,151 @@ class CartController extends Controller
         return redirect()->route('cart.cart-info');
     }
 
+    public function checkout(Request $request)
+    {
+        //get cart info from SESSION
+        $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
+        $total = 0;
+        $products = [];
+        if (!empty($carts)) {
+            // create list product id
+            $listProductId = [];
+            foreach ($carts as $cart) {
+                $listProductId[] = $cart['id'];
+            }
+            //dd( $listProductId);
+            // get data product from list product id
+            $products = Product::whereIn('id', $listProductId)
+            ->get();
+        }
+        //dd($products);
+        return view('carts.checkout', compact('carts','products','total'));
+    }
+
+    public function checkoutComplete(Request $request)
+    {
+        // get cart info
+        $carts = Session::get('carts');
+
+        // validate quanity of product -> Available (in-stock | out-stock)
 
 
+        // create data to save into table orders
+        $dataOrder = [
+            'user_id' => Auth()->id(),
+            'status' => Order::STATUS[0],
+        ];
 
+        DB::beginTransaction();
 
-    // public function checkout(Request $request)
-    // {
-    //     $data = [];
+        try {
+            // save data into table orders
+            $order = Order::create($dataOrder);
+            $orderId = $order->id;
 
-    //     //get cart info from SESSION
-    //     $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
-    //     $data['carts'] = $carts;
+            if (!empty($carts)) {
+                foreach ($carts as $cart) {
+                    $productId = $cart['id'];
+                    $quantity = $cart['quantity'];
+                    $priceId = $cart['price_id'];
 
-    //     if (!empty($carts)) {
-    //         $dataCart = [];
+                    $orderDetail = [
+                        'product_id' => $productId,
+                        'order_id' => $orderId,
+                        'price_id' => $priceId,
+                        'quantity' => $quantity,
+                    ];
+                    // save data into table order_details
+                    OrderDetail::create($orderDetail);
+                }
+            }
 
-    //         // create list product id
-    //         $listProductId = [];
-    //         foreach ($carts as $cart) {
-    //             $listProductId[] = $cart['id'];
-    //         }
+            DB::commit();
 
-    //         // get data product from list product id
-    //         $dataCart = Product::whereIn('id', $listProductId)
-    //             ->get();
-    //         $data['products'] = $dataCart;
+            // remove session carts, step_by_step
+            $request->session()->forget(['carts', 'step_by_step']);
 
-    //         // add step by step to SESSION
-    //         session(['step_by_step' => 2]);
-    //     }
+            return redirect()->route('home')->with('success', 'Your Order was successful!');
+        } catch (Exception $exception) {
+            DB::rollBack();
 
-    //     return view('carts.checkout', $data);
-    // }
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 
-    // public function checkoutComplete(Request $request)
-    // {
-    //     // get cart info
-    //     $carts = Session::get('carts');
+    public function sendVerifyCode(Request $request)
+    {
+        // send code to verify Order
+        // check exist send code ?
+        $userId = Auth::id();
+        $email = Auth::user()->email;
+        $currentDate = date('Y-m-d H:i:s');
+        $dateSubtract15Minutes = date('Y-m-d H:i:s', (time() - 60 * 15)); // current - 15 minutes
+        Log::info('dateSubtract15Minutes');
+        Log::info($dateSubtract15Minutes);
+        $orderVerify = OrderVerify::where('user_id', $userId)
+            ->whereBetween('expire_date', [$dateSubtract15Minutes, $currentDate])
+            ->where('status', OrderVerify::STATUS[0])
+            ->first();
 
-    //     // validate quanity of product -> Available (in-stock | out-stock)
+        //dd($orderVerify);
 
+        if (!empty($orderVerify)) { // already sent code and this code is available
+            return response()->json(['message' => 'We sent code to your email about 15 minutes ago. Please check email to get code.']);
+        } else { // not send code
+            $dataSave = [
+                'user_id' => $userId,
+                'status'  => OrderVerify::STATUS[0], // default 0
+                'code'  => CommonUtil::generateUUID(),
+                'expire_date'  => $currentDate,
+            ];
+            DB::beginTransaction();
 
-    //     // create data to save into table orders
-    //     $dataOrder = [
-    //         'user_id' => Auth()->id(),
-    //         'status' => Order::STATUS[0],
-    //     ];
+            try {
+                OrderVerify::create($dataSave);
 
-    //     DB::beginTransaction();
+                // commit insert data into table
+                DB::commit();
 
-    //     try {
-    //         // save data into table orders
-    //         $order = Order::create($dataOrder);
-    //         $orderId = $order->id;
+                // send code to email
+                Mail::to($email)->send(new SendVerifyCode($dataSave));
 
-    //         if (!empty($carts)) {
-    //             foreach ($carts as $cart) {
-    //                 $productId = $cart['id'];
-    //                 $quantity = $cart['quantity'];
-    //                 $priceId = $cart['price_id'];
+                return response()->json(['message' => 'We sent code to email. Please check email to get code.']);
 
-    //                 $orderDetail = [
-    //                     'product_id' => $productId,
-    //                     'order_id' => $orderId,
-    //                     'price_id' => $priceId,
-    //                     'quantity' => $quantity,
-    //                 ];
-    //                 // save data into table order_details
-    //                 OrderDetail::create($orderDetail);
-    //             }
-    //         }
+            } catch (\Exception $exception) {
+                // rollback data and dont insert into table
+                DB::rollBack();
 
-    //         DB::commit();
+                return response()->json(['message' => $exception->getMessage()]);
+            }
+        }
+    }
 
-    //         // remove session carts, step_by_step
-    //         $request->session()->forget(['carts', 'step_by_step']);
+    public function confirmVerifyCode(Request $request)
+    {
+        $code = $request->code;
+        $userId = Auth::id();
 
-    //         return redirect()->route('home')->with('success', 'Your Order was successful!');
-    //     } catch (Exception $exception) {
-    //         DB::rollBack();
+        $orderVerify = OrderVerify::where('code', $code)
+            ->where('user_id', $userId)
+            ->where('status', OrderVerify::STATUS[0])
+            ->first();
+        //  validate code
 
-    //         return redirect()->back()->with('error', $exception->getMessage());
-    //     }
-    // }
+        //dd($orderVerify );
 
-    // public function sendVerifyCode(Request $request)
-    // {
-    //     // send code to verify Order
-    //     // check exist send code ?
-    //     $userId = Auth::id();
-    //     $email = Auth::user()->email;
-    //     $currentDate = date('Y-m-d H:i:s');
-    //     $dateSubtract15Minutes = date('Y-m-d H:i:s', (time() - 60 * 15)); // current - 15 minutes
-    //     Log::info('dateSubtract15Minutes');
-    //     Log::info($dateSubtract15Minutes);
-    //     $orderVerify = OrderVerify::where('user_id', $userId)
-    //         ->whereBetween('expire_date', [$dateSubtract15Minutes, $currentDate])
-    //         ->where('status', OrderVerify::STATUS[0])
-    //         ->first();
+        DB::beginTransaction();
 
-    //     if (!empty($orderVerify)) { // already sent code and this code is available
-    //         return response()->json(['message' => 'We sent code to your email about 15 minutes ago. Please check email to get code.']);
-    //     } else { // not send code
-    //         $dataSave = [
-    //             'user_id' => $userId,
-    //             'status'  => OrderVerify::STATUS[0], // default 0
-    //             'code'  => CommonUtil::generateUUID(),
-    //             'expire_date'  => $currentDate,
-    //         ];
-    //         DB::beginTransaction();
+        try {
+            $orderVerify->status = OrderVerify::STATUS[1];
+            //dd($orderVerify );
+            $orderVerify->save();
+            DB::commit();
+            return response()->json(['message' => 'Confirmed code is OK.']);
+        } catch (\Exception $exception) {
+            DB::rollBack();
 
-    //         try {
-    //             OrderVerify::create($dataSave);
-
-    //             // commit insert data into table
-    //             DB::commit();
-
-    //             // send code to email
-    //             Mail::to($email)->send(new SendVerifyCode($dataSave));
-
-    //             return response()->json(['message' => 'We sent code to email. Please check email to get code.']);
-    //         } catch (\Exception $exception) {
-    //             // rollback data and dont insert into table
-    //             DB::rollBack();
-
-    //             return response()->json(['message' => $exception->getMessage()]);
-    //         }
-    //     }
-    // }
-
-    // public function confirmVerifyCode(Request $request)
-    // {
-    //     $code = $request->code;
-    //     $userId = Auth::id();
-
-    //     $orderVerify = OrderVerify::where('code', $code)
-    //         ->where('user_id', $userId)
-    //         ->where('status', OrderVerify::STATUS[0])
-    //         ->first();
-    //     //  validate code
-
-    //     DB::beginTransaction();
-
-    //     try {
-    //         $orderVerify->status = OrderVerify::STATUS[1];
-    //         $orderVerify->save();
-
-    //         DB::commit();
-
-    //         // add step by step to SESSION
-    //         session(['step_by_step' => 2]);
-
-    //         return response()->json(['message' => 'Confirmed code is OK.']);
-    //     } catch (\Exception $exception) {
-    //         DB::rollBack();
-
-    //         return response()->json(['message' => $exception->getMessage()]);
-    //     }
-    // }
+            return response()->json(['message' => $exception->getMessage()]);
+        }
+    }
 }

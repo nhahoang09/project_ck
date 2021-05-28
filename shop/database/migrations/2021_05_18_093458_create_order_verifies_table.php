@@ -17,7 +17,7 @@ class CreateOrderVerifiesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->tinyInteger('status')->default(0);
-            $table->string('code', 50);
+            $table->string('code',6);
             $table->dateTime('expire_date');
             $table->timestamps();
             $table->softDeletes();

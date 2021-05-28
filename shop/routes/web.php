@@ -61,3 +61,17 @@ Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
     Route::post('send-verify-code', [CartController::class, 'sendVerifyCode'])->middleware(['auth'])->name('send-verify-code');
     Route::post('confirm-verify-code', [CartController::class, 'confirmVerifyCode'])->middleware(['auth'])->name('confirm-verify-code');
 });
+
+
+////test mail
+// Route::get('send-mail', function () {
+
+//     $details = [
+//         'title' => 'Mail from ItSolutionStuff.com',
+//         'body' => 'This is for testing email using smtp'
+//     ];
+
+//     \Mail::to('namhoang191097@gmail.com')->send(new \App\Mail\Testmail($details));
+
+//     return "email send";
+// });
