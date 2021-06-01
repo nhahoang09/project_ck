@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategorySearchController;
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,17 +39,14 @@ Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
     Route::get('/search', [ProductController::class, 'search'])->name('search');
 
 });
-
+// search category
 Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
     Route::get('/search/{id}', [CategorySearchController::class, 'search'])->name('search');
 
 });
 
-// sử dụng check Authentication
-// Route::group(['middleware' => 'auth'], function () {
-// }
-// cart
 
+// cart
 Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
     Route::get('/cart-info', [CartController::class, 'getCartInfo'])->name('cart-info');//->middleware('check_order_step_by_step');
     Route::post('cart/{id}', [CartController::class, 'addCart'])->name('add-cart');
@@ -62,6 +60,13 @@ Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
     Route::post('confirm-verify-code', [CartController::class, 'confirmVerifyCode'])->middleware(['auth'])->name('confirm-verify-code');
 });
 
+// order history
+Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
+    Route::get('/list-order', [OrderController::class, 'listOrder'])->middleware(['auth'])->name('list-order');
+    Route::get('/cancel-order/{id}', [OrderController::class, 'cancelOrder'])->middleware(['auth'])->name('cancel-order');
+    Route::get('/order-detail/{id}', [OrderController::class, 'orderDetail'])->middleware(['auth'])->name('order-detail');
+
+});
 
 ////test mail
 // Route::get('send-mail', function () {

@@ -46,26 +46,32 @@ class Product extends Model
         return $this->hasMany(Price::class);
     }
 
-    public function promotions()
-    {
-        return $this->hasMany(Promotion::class);
-    }
+    // public function promotions()
+    // {
+    //     return $this->hasMany(Promotion::class);
+    // }
 
 
     public function getPrice()
     {
+        $currentdate = date('Y-m-d');
         return $this->hasOne(Price::class)
+            ->where('end_date', '>=', $currentdate)
             ->where('status',1)
-            //->orwhere('price','desc')
             ->first();
     }
 
-    public function getPromotion()
-    {
-        return $this->hasOne(Promotion::class)
-            ->where('status',1)
-            //->orwhere('discount','desc')
-            ->first();
+    // public function getPromotion()
+    // {
+    //     return $this->hasOne(Promotion::class)
+    //         ->where('status',1)
+    //         //->orwhere('discount','desc')
+    //         ->first();
+    // }
+    public function getPromotion() {
+        return $this->belongsToMany(Promotion::class, 'product_promotion', 'product_id', 'promotion_id')
+        // return $this->belongsToMany(ProductPromotion::class);
+        ->first();
     }
 
 

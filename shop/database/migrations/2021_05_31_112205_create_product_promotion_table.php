@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThumbnailsTable extends Migration
+class CreateProductPromotionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateThumbnailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('thumbnails', function (Blueprint $table) {
+        Schema::create('product_promotion', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('promotion_id');
+            $table->double('quantity');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('promotion_id')->references('id')->on('promotions');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateThumbnailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('thumbnails');
+        Schema::dropIfExists('product_promotion');
     }
 }

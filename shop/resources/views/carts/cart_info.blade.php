@@ -47,7 +47,7 @@
                         </td>
                         <td class="product-price">
                             @php
-                                $price = $product->getPrice()->price*(100 - $product->getPromotion()->discount)/100;
+                                $price = $product->getPrice()->price*(100 - 5)/100;
                             @endphp
                             <span class="amount"> {{ number_format($price) }} VND</span>
                         </td>
@@ -55,9 +55,10 @@
                             {{-- {{ number_format($carts[$product->id]['quantity']) }} --}}
                             <form action=" {{route('cart.update-cart',$product->id)}}" method="POST">
                                 @csrf
-                                {{-- <input type="hidden" name="product_id" value="{{ $product->id }}"> --}}
                                 <div class="cart-plus-minus-button">
-                                    <input class="" type="text" name="quantity" value="{{$carts[$product->id]['quantity'] }} ">
+                                    {{-- <input type="button" value="-" class="button-minus" data-field="quantity"> --}}
+                                    <input class="" style="text-align: center" type="text" id="quantity" name="quantity" value=" {{ $carts[$product->id]['quantity']}}">
+                                    {{-- <input type="button" value="+" class="button-plus" data-field="quantity"> --}}
                                 </div>
                                 <button type="submit" class="beta-btn primary" name="update_cart">Update Cart </button>
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductDetail;
-use App\Models\Thumbnail;
+
 
 class ProductSeeder extends Seeder
 {
@@ -102,7 +102,6 @@ class ProductSeeder extends Seeder
         $listThumbnails = [
             'frontend/image/product/54eaf93713081_-_07-germany-tuna.jpg',
             'frontend/image/product/all1).jpg',
-            'frontend/image/product/234.jpg',
             'frontend/image/product/544bc48782741.png',
             'frontend/image/product/1234.jpg',
             'frontend/image/product/40819_food_pizza.jpg',

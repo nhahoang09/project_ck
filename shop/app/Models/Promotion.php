@@ -16,7 +16,6 @@ class Promotion extends Model
 
     protected $fillable = [
         'discount',
-        'product_id',
         'begin_date',
         'end_date',
         'status',
@@ -27,8 +26,8 @@ class Promotion extends Model
         1, // Public
     ];
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
 }

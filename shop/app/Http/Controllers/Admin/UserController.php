@@ -3,27 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\OrderDetail;
+
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\DB;
-use OrdersDB;
-use product;
+use Illuminate\Support\Facades\Log;
 
-class OrderController extends Controller
+class UserController extends Controller
 {
-    //
-
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-
-        $orders=Order::with('user')->paginate(10);
-        return view('admin.orders.index',compact('orders'));
+    public function index()
+    {
+        //
+        $users = Admin::where('role_id','!=',1)->paginate(8);
+        return view('admin.users.index',compact('users'));
     }
 
     /**
@@ -34,6 +33,7 @@ class OrderController extends Controller
     public function create()
     {
         //
+        return view('admin.users.create');
     }
 
     /**
@@ -45,6 +45,34 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' =>'required|min:8',
+            'role_id' =>'required',
+        ]);
+        $user = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => $request->role_id,
+        ];
+        DB::beginTransaction();
+
+        try {
+            Admin::create($user);
+
+            // insert into data to table category (successful)
+            DB::commit();
+
+            return redirect()->route('admin.user.index')->with('success', 'Insert user successful!.');
+        } catch (\Exception $ex) {
+            // insert into data to table category (fail)
+            DB::rollBack();
+            Log::error($ex->getMessage());
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
+
     }
 
     /**
@@ -56,15 +84,6 @@ class OrderController extends Controller
     public function show($id)
     {
         //
-        $total = 0;
-        $order=Order::find($id);
-        $order_details = OrderDetail::where('order_id','=',$id)
-        ->join('products', 'order_details.product_id', '=', 'products.id')
-        ->join('prices', 'order_details.price_id', '=', 'prices.id')
-        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity',)
-        ->get();
-        //dd($order);
-        return view('admin.orders.detail',compact('order_details','total'));
     }
 
     /**
@@ -75,11 +94,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $data = [];
-
-        // get order
-        $order = Order::findOrFail($id);
-        return view('admin.orders.edit', compact('order'));
+        //
     }
 
     /**
@@ -91,23 +106,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
-
-        DB::beginTransaction();
-
-        try {
-            $order->update([
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('admin.order.index')->with('success', 'Update Status of Order successful.');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        //
     }
 
     /**
@@ -120,5 +119,4 @@ class OrderController extends Controller
     {
         //
     }
-
 }

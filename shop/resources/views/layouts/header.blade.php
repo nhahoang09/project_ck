@@ -10,29 +10,55 @@
                     </ul>
                 </div>
                 <div class="pull-right auto-width-right">
-                    <ul class="top-details menu-beta l-inline">
+
                         @auth
+                        <ul class="top-details menu-beta ">
                             @if(Route::has('login'))
-                            <li>
+                            {{-- <li>
                                 <a href="#"> <i  class="fa fa-user"></i>  ({{Auth::user()->name}})<i class="fa fa-angle-down" ></i></a>
                             </li>
+
+
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <li class="" >
                                     <a href=""><button class="" style="background-color: #ffffff; " type="submit">Đăng xuất</button></a>
                                 </li>
-                            </form>
+                            </form> --}}
+                            <div class="dropdown" >
+                                    <a data-toggle="dropdown" href="#">Xin chào: {{Auth::user()->name}}<i class="fa fa-angle-down" ></i></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                   <li class="dropdown-item">
+                                       <a href="{{ route('order.list-order') }}"><button class="btn btn-dark"> Lịch sử mua hàng</button></a>
+                                   </li>
+                                   <li class="dropdown-item">
+                                       <a  href="#"><button class="btn btn-dark"> Cập nhật tài khoản</button></a>
+                                   </li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <li class="dropdown-item" >
+                                            <a href=""><button class="btn btn-dark" type="submit"> Đăng xuất</button></a>
+                                        </li>
+                                    </form>
+
+                                </ul>
+                            </div>
                             @endif
+                        </ul>
                         @else
+                        <ul class="top-details menu-beta l-inline">
                             @if (Route::has('login'))
-                                <li><a href="{{ route('login') }}">Đăng nhập</a></li>
-                            @endif
-                            @if (Route::has('register'))
-                                <li><a href="{{ route('register') }}">Đăng ký</a></li>
-                             @endif
+                            <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                        @endif
+                        @if (Route::has('register'))
+                            <li><a href="{{ route('register') }}">Đăng ký</a></li>
+                         @endif
+
+                        </ul>
 
                         @endauth
-                    </ul>
+
                 </div>
                 <div class="clearfix"></div>
             </div> <!-- .container -->
@@ -120,7 +146,9 @@
         </div> <!-- .header-bottom -->
     </div> <!-- #header -->
 
-
+<script>
+    $('.dropdown-toggle').dropdown()
+</script>
 
 
 

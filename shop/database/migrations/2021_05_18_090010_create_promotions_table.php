@@ -16,14 +16,11 @@ class CreatePromotionsTable extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->double('discount');
-            $table->unsignedBigInteger('product_id');
             $table->dateTime('begin_date');
             $table->dateTime('end_date');
             $table->boolean('status')->default(1)->comment('status: 1 - public, 0: private');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

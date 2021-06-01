@@ -16,7 +16,7 @@ class Order extends Model
 
     /**
      * Define variable STATUS
-     * 0: đã tạo đơn hàng và chưa thanh toán
+     * 0: đã tạo đơn hàng
      * 1: đã tạo đơn và đã thanh toán online
      * 2: (shipping) shipper đang đi giao hàng
      * 3: (cancel) đơn hàng bị hủy do lỗi kỹ thuật hoặc một lý do khác
@@ -49,7 +49,7 @@ class Order extends Model
      */
     public function order_detail()
     {
-        return $this->hasOne(OrderDetail::class, 'order_id', 'id');
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
 
 

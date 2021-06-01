@@ -18,7 +18,7 @@ class ProductController extends Controller
 {
    //
     private const FOLDER_UPLOAD_PRODUCT_THUMBNAIL = 'frontend/image/product';
-  
+
 
     /**
      * Display a listing of the resource.
@@ -71,6 +71,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $thumbnailPath = null;
+
         if ($request->hasFile('thumbnail')
             && $request->file('thumbnail')->isValid()) {
             // Nếu có thì thục hiện lưu trữ file vào public/frontent/image/product
@@ -171,7 +172,7 @@ class ProductController extends Controller
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')
             && $request->file('thumbnail')->isValid()) {
-            // Nếu có thì thục hiện lưu trữ file vào public/frontent/image/product 
+            // Nếu có thì thục hiện lưu trữ file vào public/frontent/image/product
             $image = $request->file('thumbnail');
             $extension = $request->thumbnail->extension();
             $extension = strtolower($extension); // convert string to lowercase

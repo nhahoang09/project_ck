@@ -84,6 +84,7 @@ class CartController extends Controller
         $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
         //dd($carts);
        // $data['carts'] = $carts;
+
        $updateProduct = [
             'quantity' => $request->quantity,
         ];
@@ -91,7 +92,7 @@ class CartController extends Controller
         //dd($carts[$id]);
         session(['carts' => $carts]);
         //dd($carts);
-        //return view('carts.cart_info', compact('carts'));
+
         return redirect()->route('cart.cart-info');
     }
     public function removeCart($id,Request $request)
@@ -170,8 +171,8 @@ class CartController extends Controller
 
             DB::commit();
 
-            // remove session carts, step_by_step
-            $request->session()->forget(['carts', 'step_by_step']);
+            // remove session carts
+            $request->session()->forget('carts');
 
             return redirect()->route('home')->with('success', 'Your Order was successful!');
         } catch (Exception $exception) {

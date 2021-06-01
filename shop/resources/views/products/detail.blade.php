@@ -36,7 +36,7 @@
                         @csrf
 
                         <input type="hidden" name="price_id" value="{{  $product->getPrice()->id }}">
-                        <input type="hidden" name="promotion_id" value="{{ $product->getPromotion()->id }}">
+                        {{-- <input type="hidden" name="promotion_id" value="{{ $product->getPromotion()->id }}"> --}}
 
                         <div class="single-item-body">
                             <p class="single-item-title" style="font-size: 25px">{{$product->name  }}</p>
@@ -44,7 +44,7 @@
 
                             <p class="single-item-price">
                                     @php
-                                        $money = $product->getPrice()->price*(100 - $product->getPromotion()->discount )/100;
+                                        $money = $product->getPrice()->price*(100 - 5)/100;
                                     @endphp
                                     <span>{{ number_format($money)}} VND</span>
                             </p>
@@ -95,8 +95,9 @@
                                     $get_price = $pr_re->getPrice();
                                     $price = $get_price->price;
                                     // get 1 promotion
-                                    $get_promotion = $pr_re->getPromotion();
-                                    $promotion = $get_promotion->discount;
+                                    // $get_promotion = $pr_re->getPromotion();
+                                    // $promotion = $get_promotion->discount;
+                                    $promotion = 5;
                                     // money
                                     $money = $price * (100 - $promotion)/100;
                                     @endphp

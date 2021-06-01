@@ -14,7 +14,7 @@
           <img src="/backend/admin_lte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{ auth()->guard('admin')->user()->name }}</a>
         </div>
       </div>
 
@@ -137,6 +137,100 @@
               </li>
             </ul>
           </li>
+
+          {{-- menu of slide module --}}
+          @php
+            $routeCategoryArr = [
+              'admin.slide.index',
+              'admin.slide.create',
+              'admin.slide.edit',
+              'admin.slide.show',
+            ];
+          @endphp
+          <li class="nav-item {{ in_array(Route::currentRouteName(), $routeCategoryArr) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Slide
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.slide.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.slide.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List Slide</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.slide.create') }}" class="nav-link {{ Route::currentRouteName() == 'admin.slide.create' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Create Slide</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+
+          {{-- menu of customer module --}}
+          @php
+            $routeCategoryArr = [
+              'admin.customer.index',
+            ];
+          @endphp
+          <li class="nav-item {{ in_array(Route::currentRouteName(), $routeCategoryArr) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Customer
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.customer.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.customer.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List Customer</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+
+
+           {{-- menu of user module --}}
+           @php
+           $routeCategoryArr = [
+             'admin.user.index',
+             'admin.user.create',
+             'admin.user.edit',
+
+           ];
+         @endphp
+         <li class="nav-item {{ in_array(Route::currentRouteName(), $routeCategoryArr) ? 'menu-open' : '' }}">
+           <a href="#" class="nav-link">
+             <i class="nav-icon fas fa-copy"></i>
+             <p>
+               User
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview">
+             <li class="nav-item">
+               <a href="{{ route('admin.user.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.user.index' ? 'active' : '' }}">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>List User</p>
+               </a>
+             </li>
+             <li class="nav-item">
+               <a href="{{ route('admin.user.create') }}" class="nav-link {{ Route::currentRouteName() == 'admin.user.create' ? 'active' : '' }}">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Create User</p>
+               </a>
+             </li>
+           </ul>
+         </li>
+
         </ul>
 
         <form action="{{ route('admin.logout') }}" method="POST">

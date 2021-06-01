@@ -3,27 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
-use OrdersDB;
-use product;
 
-class OrderController extends Controller
+
+class CustomerController extends Controller
 {
-    //
-
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-
-        $orders=Order::with('user')->paginate(10);
-        return view('admin.orders.index',compact('orders'));
+    public function index()
+    {
+        //
+        $customers = User::paginate(8);
+        return view('admin.customers.index',compact('customers'));
     }
 
     /**
@@ -56,15 +52,6 @@ class OrderController extends Controller
     public function show($id)
     {
         //
-        $total = 0;
-        $order=Order::find($id);
-        $order_details = OrderDetail::where('order_id','=',$id)
-        ->join('products', 'order_details.product_id', '=', 'products.id')
-        ->join('prices', 'order_details.price_id', '=', 'prices.id')
-        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity',)
-        ->get();
-        //dd($order);
-        return view('admin.orders.detail',compact('order_details','total'));
     }
 
     /**
@@ -75,11 +62,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $data = [];
-
-        // get order
-        $order = Order::findOrFail($id);
-        return view('admin.orders.edit', compact('order'));
+        //
     }
 
     /**
@@ -91,23 +74,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
-
-        DB::beginTransaction();
-
-        try {
-            $order->update([
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('admin.order.index')->with('success', 'Update Status of Order successful.');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        //
     }
 
     /**
@@ -119,6 +86,20 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
-    }
+        DB::beginTransaction();
 
+        try {
+            $customer = User::find($id);
+            $customer->delete();
+
+            DB::commit();
+
+            return redirect()->route('admin.customer.index')
+                ->with('success', 'Delete Customer successful!');
+        }  catch (\Exception $ex) {
+            DB::rollBack();
+            // have error so will show error message
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
+    }
 }

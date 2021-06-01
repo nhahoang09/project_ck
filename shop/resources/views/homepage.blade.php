@@ -40,8 +40,9 @@
                                                 $get_price = $new_product->getPrice();
                                                 $price = $get_price->price;
                                                 // get 1 promotion
-                                                $get_promotion = $new_product->getPromotion();
-                                                $promotion = $get_promotion->discount;
+                                                // $get_promotion = $new_product->getPromotion();
+                                                // $promotion = $get_promotion->discount;
+                                                $promotion =5;
                                                 // money
                                                 $money = $price * (100 - $promotion)/100;
                                                 @endphp
@@ -99,13 +100,16 @@
                                                 $price = $get_price->price;
                                                 // get 1 promotion
                                                 $get_promotion = $product->getPromotion();
-                                                $promotion = $get_promotion->discount;
+                                               //dd($get_promotion);
+
+                                               // dd($promotion);
                                                 // money
-                                                $money = $price * (100 - $promotion)/100;
+                                                //$money = $price * (100 -number_format($promotion))/100;
 
                                                 @endphp
                                                 <span class="flash-del"> {{number_format($price) }} </span>
-                                                <span class="flash-sale">{{number_format($money) }}</span>
+                                                <span class="flash-del"> {{$get_promotion}} </span>
+                                                <span class="flash-sale">{{number_format($promotion) }}</span>
                                             </p>
                                         </div>
                                         <div class="single-item-caption">

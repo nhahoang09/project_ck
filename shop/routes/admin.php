@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PriceController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\SlideController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,14 +86,31 @@ Route::group(['middleware' => ['check_login_admin'] , 'as' => 'admin.'], functio
 
 
 
-      // route for module Users
-    //   Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
-    //     Route::get('/list', [ProductController::class, 'index'])->name('index');
-    //     Route::get('/create', [ProductController::class, 'create'])->name('create');
-    //     Route::post('/store', [ProductController::class, 'store'])->name('store');
-    //     Route::get('/show/{id}', [ProductController::class, 'show'])->name('show');
-    //     Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
-    //     Route::put('/update/{id}', [ProductController::class, 'update'])->name('update');
-    //     Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('destroy');
-    // });
+      // route for module Customers
+      Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
+        Route::get('/list', [CustomerController::class, 'index'])->name('index');
+        Route::delete('/delete/{id}', [CustomerController::class, 'destroy'])->name('destroy');
+    });
+
+     //route for module Slides
+    Route::group(['prefix' => 'slide', 'as' => 'slide.'], function () {
+        Route::get('/list', [SlideController::class, 'index'])->name('index');
+        Route::get('/create', [SlideController::class, 'create'])->name('create');
+        Route::post('/store', [SlideController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [SlideController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [SlideController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [SlideController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [SlideController::class, 'destroy'])->name('destroy');
+    });
+
+     // route for module User
+     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
+        Route::get('/list', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/store', [UserController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
 });

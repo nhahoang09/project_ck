@@ -19,6 +19,7 @@ class RoleSeeder extends Seeder
         $data = [
             ['name' => 'Admin', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'Shipper', 'created_at' => $date, 'updated_at' => $date],
+
         ];
 
         DB::table('roles')->insert($data);
