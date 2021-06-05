@@ -24,11 +24,8 @@
                                 <div class="col-sm-3">
                                     <div class="single-item">
 
-                                        <div class="ribbon-wrapper">
-                                            <div class="ribbon sale">Sale</div>
-                                        </div>
                                         <div class="single-item-header">
-                                            <a href="{{ route('product.detail', $new_product-> id) }}"><img
+                                            <a href="{{ route('product.detail', $new_product->id) }}"><img
                                                     src="{{ $new_product->thumbnail }}" alt=""
                                                     height="250px"></a>
                                         </div>
@@ -40,15 +37,32 @@
                                                 $get_price = $new_product->getPrice();
                                                 $price = $get_price->price;
                                                 // get 1 promotion
-                                                // $get_promotion = $new_product->getPromotion();
-                                                // $promotion = $get_promotion->discount;
-                                                $promotion =5;
-                                                // money
-                                                $money = $price * (100 - $promotion)/100;
+                                                $currentDate = date('Y-m-d');
+                                                //dd( $currentDate);
+                                                $get_promotion = $new_product->getPromotionLatest($new_product->id)->first();
+                                                //dd($get_promotions);
+                                                $discount = 0;
+                                                if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                                    $discount = $get_promotion->promotion->discount;
+                                                }
+                                                // var_dump($get_promotion);
+                                                //var_dump('discount: ' . $discount);
                                                 @endphp
-                                                <span class="flash-del"> {{number_format($price) }} </span>
-                                                <span class="flash-sale">{{number_format($money) }}</span>
+                                                @if (!empty($discount))
+                                                        @php
+                                                            $money = $price * (100 - $discount)/100;
+                                                        @endphp
+                                                    <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                                    <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                                @else
+                                                    <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                                @endif
                                             </p>
+                                        </div>
+                                        <div class="ribbon-wrapper">
+                                            @if (!empty($discount))
+                                                <div class="ribbon sale">Sale</div>
+                                            @endif
                                         </div>
                                         <div class="single-item-caption">
                                             <a class="add-to-cart pull-left" href="{{ route('cart.add-cart',$new_product->id) }}"><i
@@ -78,12 +92,8 @@
                             </div>
                             <div class="row">
                                 @foreach ($products as $product)
-
                                 <div class="col-sm-3">
-                                    <div class="single-item">
-                                        <div class="ribbon-wrapper">
-                                            <div class="ribbon sale">Sale</div>
-                                        </div>
+                                    <div class="single-item border p-5 " >
 
                                         <div class="single-item-header">
                                             <a href="{{ route('product.detail', $product->id) }}"><img
@@ -99,19 +109,35 @@
                                                 $get_price = $product->getPrice();
                                                 $price = $get_price->price;
                                                 // get 1 promotion
-                                                $get_promotion = $product->getPromotion();
-                                               //dd($get_promotion);
-
-                                               // dd($promotion);
-                                                // money
-                                                //$money = $price * (100 -number_format($promotion))/100;
-
+                                                $currentDate = date('Y-m-d');
+                                                //dd( $currentDate);
+                                                $get_promotion = $product->getPromotionLatest($product->id)->first();
+                                                //dd($get_promotions);
+                                                $discount = 0;
+                                                if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                                    $discount = $get_promotion->promotion->discount;
+                                                }
+                                                // var_dump($get_promotion);
+                                                //var_dump('discount: ' . $discount);
                                                 @endphp
-                                                <span class="flash-del"> {{number_format($price) }} </span>
-                                                <span class="flash-del"> {{$get_promotion}} </span>
-                                                <span class="flash-sale">{{number_format($promotion) }}</span>
+                                                @if (!empty($discount))
+                                                        @php
+                                                            $money = $price * (100 - $discount)/100;
+                                                        @endphp
+                                                    <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                                    <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                                @else
+                                                    <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                                @endif
                                             </p>
                                         </div>
+                                        <div class="ribbon-wrapper">
+                                            @if (!empty($discount))
+                                                <div class="ribbon sale">Sale</div>
+                                            @endif
+
+                                        </div>
+
                                         <div class="single-item-caption">
                                             <a class="add-to-cart pull-left" href="{{ route('cart.add-cart',$product->id) }}"><i
                                                     class="fa fa-shopping-cart"></i></a>

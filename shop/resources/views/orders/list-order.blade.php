@@ -52,7 +52,7 @@
                             @endif
 
                         </td>
-                        <td><a href="#" class="btn btn-info">Order Detail</a></td>
+                        <td><a href="{{ route('order.order-detail',$order->id) }}" class="btn btn-info">Order Detail</a></td>
                         <td><a href="{{ route('order.cancel-order',$order->id) }}" class="btn btn-info">Cancel</a></td>
                     </tr>
                     @endforeach

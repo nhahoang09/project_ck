@@ -47,9 +47,29 @@
                         </td>
                         <td class="product-price">
                             @php
-                                $price = $product->getPrice()->price*(100 - 5)/100;
+                            // get 1 price
+                            $get_price = $product->getPrice();
+                            $price = $get_price->price;
+                            // get 1 promotion
+                            $currentDate = date('Y-m-d');
+                            //dd( $currentDate);
+                            $get_promotion = $product->getPromotionLatest($product->id)->first();
+                            //dd($get_promotions);
+                            $discount = 0;
+                            if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                $discount = $get_promotion->promotion->discount;
+                            }
+                            // var_dump($get_promotion);
+                            //var_dump('discount: ' . $discount);
                             @endphp
-                            <span class="amount"> {{ number_format($price) }} VND</span>
+                            @if (!empty($discount))
+                                @php
+                                    $price = $price * (100 - $discount)/100;
+                                @endphp
+                                <span class="amount"> {{ number_format($price) }} VND</span>
+                            @else
+                                <span class="amount"> {{ number_format($price) }} VND</span>
+                            @endif
                         </td>
                         <td class="product-quantity">
                             {{-- {{ number_format($carts[$product->id]['quantity']) }} --}}
@@ -61,13 +81,12 @@
                                     {{-- <input type="button" value="+" class="button-plus" data-field="quantity"> --}}
                                 </div>
                                 <button type="submit" class="beta-btn primary" name="update_cart">Update Cart </button>
-
                             </form>
                         </td>
+
                         <td class="product-subtotal">
                             @php
                                 $money = $carts[$product->id]['quantity'] * $price;
-
                                 $total+=$money;
                             @endphp
                             <span class="amount">{{ number_format($money) }} VND</span>

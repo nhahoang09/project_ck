@@ -15,10 +15,21 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $customers = User::paginate(8);
+
+
+        $customers = User::select('id','name','email','phone','address','created_at');
+
+        if(!empty($request->name)) {
+            $customers=$customers->where('name', 'like', '%' . $request->name . '%');
+        }
+        if(!empty($request->date)) {
+            $customers=$customers->whereDate('created_at','=',$request->date);
+        }
+
+        $customers = $customers->paginate(8);
         return view('admin.customers.index',compact('customers'));
     }
 

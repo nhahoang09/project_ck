@@ -112,6 +112,39 @@
             </ul>
           </li>
 
+           {{-- menu of promotion module --}}
+           @php
+           $routeProductArr = [
+             'admin.promotion.index',
+             'admin.promotion.create',
+             'admin.promotion.edit',
+             'admin.promotion.show',
+           ];
+         @endphp
+         <li class="nav-item {{ in_array(Route::currentRouteName(), $routeProductArr) ? 'menu-open' : '' }}">
+           <a href="#" class="nav-link">
+             <i class="nav-icon fas fa-copy"></i>
+             <p>
+               Promotion
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview">
+             <li class="nav-item">
+               <a href="{{ route('admin.promotion.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.promotion.index' ? 'active' : '' }}">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>List promotion</p>
+               </a>
+             </li>
+             <li class="nav-item">
+               <a href="{{ route('admin.promotion.create') }}" class="nav-link {{ Route::currentRouteName() == 'admin.promotion.create' ? 'active' : '' }}">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Create promotion</p>
+               </a>
+             </li>
+           </ul>
+         </li>
+
           {{-- menu of order module --}}
           @php
             $routeOrderArr = [
@@ -233,12 +266,16 @@
 
         </ul>
 
-        <form action="{{ route('admin.logout') }}" method="POST">
-          @csrf
-          <button type="submit" onclick="return confirm('Are you sure LOGOUT ?')">Logout</button>
-        </form>
+
       </nav>
       <!-- /.sidebar-menu -->
+
+      <form action="{{ route('admin.logout') }}" method="POST">
+        @csrf
+        <button type="submit" onclick="return confirm('Are you sure LOGOUT ?')">Logout</button>
+      </form>
     </div>
     <!-- /.sidebar -->
+
+
   </aside>

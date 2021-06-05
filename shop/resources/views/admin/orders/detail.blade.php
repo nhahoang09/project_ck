@@ -32,6 +32,7 @@
                 <th>Product Name</th>
                 <th>Thumbnail</th>
                 <th>Price</th>
+                <th>Discount</th>
                 <th>Quantity</th>
                 <th>Money</th>
 
@@ -45,20 +46,20 @@
                         <td>{{ $key+1 }}</td>
                         <td>{{ $order_detail->name }}</td>
                         <td>
-                            <img src="{{ asset($order_detail->thumbnail) }}" alt="{{ $order_detail->name }}" class="img-fluid" style="width: 40px; height: auto;">
+                            <img src="{{ asset($order_detail->thumbnail) }}" alt="{{ $order_detail->name }}" class="img-fluid" style="width: 80px; height: 60px;">
                         </td>
-                        <td>{{ $order_detail->price }}</td>
+                        <td>{{number_format($order_detail->price) .' VNĐ'  }}</td>
+                        <td></td>
                         <td>{{ $order_detail->quantity }}</td>
-
                         <td>
                             @php
                                 $money =  $order_detail->quantity*$order_detail->price*(100-5)/100;
                                 $total+=$money;
                             @endphp
-                            {{ $money }}
+                            {{ number_format($money) .' VNĐ'  }}
                         </td>
                         <td>
-                            <a href="{{ route('admin.order.index') }}" class="btn btn-secondary">Back</a>
+
                         </td>
 
                     </tr>
@@ -66,9 +67,10 @@
             @endif
         </tbody>
     </table>
+    <a href="{{ route('admin.order.index') }}" class="btn btn-secondary">Back</a>
 
 
-    <div class="cart-totals-row"><span> Total:</span> <span>{{ $total}}</span></div>
+    <div class="cart-totals-row"><span> Total:</span> <span> {{ number_format($total) .' VNĐ'  }}</span></div>
 
 
 

@@ -53,9 +53,17 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function orderDetail($id)
     {
         //
+        $total = 0;
+        $order=Order::find($id);
+        $order_details =  DB::table('order_details')->where('order_id','=',$id)
+        ->join('products', 'order_details.product_id', '=', 'products.id')
+        ->join('prices', 'order_details.price_id', '=', 'prices.id')
+        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity',)
+        ->get();
+        return view('orders.detail',compact('order_details','total'));
     }
 
     /**
@@ -92,12 +100,18 @@ class OrderController extends Controller
         //
 
         $order=Order::find($id);
+        if($order ->status == 2 || $order->status ==4  ){
+            $order ->status == $order ->status;
+        }
+        else{
         $order->status=3;
+        }
         try{
             $order->save();
-            return redirect()->route('orders.list-order')->with('success',"Cancel Order Success!");
+            return redirect()->route('order.list-order')->with('success',"Cancel Order Success!");
         }catch(\Exception $ex){
             return redirect()->back()->with('error',$ex->getMessage());
         }
+
     }
 }

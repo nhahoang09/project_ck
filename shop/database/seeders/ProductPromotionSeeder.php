@@ -17,14 +17,13 @@ class ProductPromotionSeeder extends Seeder
     public function run()
     {
         //
-        $quantities = [10, 20, 30,];
+        //$quantities = [10, 20, 30,];
         $products = Product::pluck('id')->toArray();
         $promotions = Promotion::pluck('id')->toArray();
-        for ($j = 0; $j < 10; $j++) {
+        for ($i = 0; $i < 10; $i++) {
             $productPromotion = [
                 'product_id' => $products[array_rand($products)],
                 'promotion_id'=>$promotions[array_rand($promotions)],
-                'quantity' => $quantities[array_rand($quantities)],
             ];
             DB::table('product_promotion')->insert($productPromotion);
         }

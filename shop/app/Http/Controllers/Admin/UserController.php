@@ -49,6 +49,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' =>'required|min:8',
+            'confirm-password' =>['same:password'],
             'role_id' =>'required',
         ]);
         $user = [
@@ -56,6 +57,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
+            'status' => 1,
         ];
         DB::beginTransaction();
 
@@ -95,6 +97,9 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+        $user = Admin::findOrFail($id);
+        return view('admin.users.edit',compact('user'));
+
     }
 
     /**
@@ -107,6 +112,23 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = Admin::findOrFail($id);
+
+        DB::beginTransaction();
+
+        try {
+            $user->update([
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.user.index')->with('success', 'Update Active/De-active User successful.');
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**

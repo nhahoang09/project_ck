@@ -51,14 +51,23 @@
             @enderror
         </div>
 
+        <div class="form-group mb-5">
+            <label for="">Confirm Password</label>
+            <input type="password" name="confirm-password" placeholder="Confirm Password"  class="form-control">
+            @error('confirm-password')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+
 
         <div class="form-group mb-5">
             <label for="">Role</label>
             <div>
                 <input type="radio" name="role_id" value="2" checked id="role_shipper-2">
                 <label for="role_shipper-2">Shippper</label>
-                <input type="radio" name="role_id" value="3"   id="role_orther-">
-                <label for="role_orther-">Orther</label>
+                <input type="radio" name="role_id" value="3"   id="role_other-">
+                <label for="role_other-">Other</label>
             </div>
         </div>
 

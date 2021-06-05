@@ -16,13 +16,12 @@
 
 @section('content')
     {{-- form search --}}
-    <h4>List promotion of {{$product['name']}}:</h4>
 
     {{-- create category link --}}
     <div class="row">
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-            <p><a href="{{ route('admin.product.promotion.create',$product->id) }}"><button class="btn btn-primary">Create</button></a></p>
-            
+            <p><a href="{{ route('admin.promotion.create') }}"><button class="btn btn-primary">Create</button></a></p>
+
         </div>
     </div>
 
@@ -41,8 +40,8 @@
         <thead class="table-dark ">
             <tr>
                 <th>#</th>
+                <th>Promotion name</th>
                 <th>Discount(%)</th>
-                <th>Product Name</th>
                 <th>Begin date</th>
                 <th>End date</th>
                 <th>Status</th>
@@ -54,14 +53,15 @@
             @foreach($promotions as $key => $promotion)
             <tr>
                 <td>{{$key +1}} </td>
+                <td>{{$promotion->name}}</td>
                 <td>{{$promotion ->discount}}</td>
-                <td>{{$product->name}}</td>
                 <td>{{$promotion->begin_date }}</td>
                 <td>{{$promotion->end_date }}</td>
                 <td>{{$promotion->status }}</td>
-                <td><a href="{{ route('admin.product.promotion.edit',[$product->id,$promotion->id]) }}" class="btn btn-info"> Edit</a></td>
+                <td><a href="{{ route('admin.promotion.show',$promotion->id) }}" class="btn btn-info"> List product </a></td>
+                <td><a href="{{ route('admin.promotion.edit',$promotion->id) }}" class="btn btn-info"> Edit</a></td>
                 <td>
-                    <form action="{{ route('admin.product.promotion.destroy',[$product->id,$promotion->id]) }}" method="post">
+                    <form action="{{ route('admin.promotion.destroy',$promotion->id) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <input type="submit" name="submit" value="Delete" onclick="return confirm('Are you sure DELETE PROMOTION?')" class="btn btn-danger">
@@ -72,4 +72,5 @@
             @endif
         </tbody>
     </table>
+    {{ $promotions->appends(request()->input())->links() }}
 @endsection

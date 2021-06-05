@@ -61,10 +61,14 @@ class OrderController extends Controller
         $order_details = OrderDetail::where('order_id','=',$id)
         ->join('products', 'order_details.product_id', '=', 'products.id')
         ->join('prices', 'order_details.price_id', '=', 'prices.id')
-        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity',)
+        //->join('promotions', 'order_details.promotion_id', '=', 'promotions.id')
+        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity')
         ->get();
-        //dd($order);
+
+
+        //dd( $order_details);
         return view('admin.orders.detail',compact('order_details','total'));
+
     }
 
     /**

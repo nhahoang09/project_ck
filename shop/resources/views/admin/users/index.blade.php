@@ -39,6 +39,7 @@
                 <th>Address</th> --}}
                 <th>Role_id</th>
                 <th>Status</th>
+                <th colspan="2">Active/De-active</th>
                 <th>Create Date</th>
 
                 <th colspan="3">Action</th>
@@ -57,10 +58,12 @@
                             <div class="alert alert-primary" role="alert">Shipper</div>
                         @endif
                         </td>
+                        <td>{{ $user->status  }}</td>
+                        <td><a href="{{ route('admin.user.edit',$user->id) }}" class="btn btn-secondary">Active/De-active</a></td>
                         <td>{{ $user->created_at }}</td>
-                        <td></td>
+
                         <td>
-                            <form action="{{ route('admin.order.destroy', $user->id) }}" method="post">
+                            <form action="{{ route('admin.user.destroy', $user->id) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <input type="submit" value="Delete" onclick="return confirm('Are you sure DELETE Customer?')" class="btn btn-danger" />

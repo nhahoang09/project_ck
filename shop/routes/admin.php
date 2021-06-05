@@ -72,16 +72,17 @@ Route::group(['middleware' => ['check_login_admin'] , 'as' => 'admin.'], functio
             Route::delete('/delete/{id}', [PriceController::class, 'destroy'])->name('destroy');
         });
 
-        // route for module Promotion
-        Route::group(['prefix' => 'promotion', 'as' => 'promotion.'], function () {
-            Route::get('/list', [PromotionController::class, 'index'])->name('index');
-            Route::get('/create', [PromotionController::class, 'create'])->name('create');
-            Route::post('/store', [PromotionController::class, 'store'])->name('store');
-            Route::get('/show/{id}', [PromotionController::class, 'show'])->name('show');
-            Route::get('/edit/{id}', [PromotionController::class, 'edit'])->name('edit');
-            Route::put('//update/{id}', [PromotionController::class, 'update'])->name('update');
-            Route::delete('/delete/{id}', [PromotionController::class, 'destroy'])->name('destroy');
-        });
+    });
+
+      // route for module Promotion
+      Route::group(['prefix' => 'promotion', 'as' => 'promotion.'], function () {
+        Route::get('/list', [PromotionController::class, 'index'])->name('index');
+        Route::get('/create', [PromotionController::class, 'create'])->name('create');
+        Route::post('/store', [PromotionController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [PromotionController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [PromotionController::class, 'edit'])->name('edit');
+        Route::put('//update/{id}', [PromotionController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [PromotionController::class, 'destroy'])->name('destroy');
     });
 
 

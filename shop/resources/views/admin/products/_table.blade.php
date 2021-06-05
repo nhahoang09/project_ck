@@ -22,7 +22,6 @@
                     <td><a href="{{ route('admin.product.show', $product->id) }}" class="btn btn-secondary">Detail</a></td>
                     <td><a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-info">Edit</a></td>
                     <td><a href="{{ route('admin.product.price.index', $product->id) }}" class="btn btn-info">Price</a></td>
-                    <td><a href="{{ route('admin.product.promotion.index', ['product_id' => $product->id]) }}" class="btn btn-info">Promotion</a></td>
                     <td>
                         <form action="{{ route('admin.product.destroy', $product->id) }}" method="post">
                             @csrf

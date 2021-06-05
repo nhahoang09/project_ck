@@ -42,6 +42,7 @@ class CartController extends Controller
         $carts[$id] = $newProduct;
         // set data for SESSION
         session(['carts' => $carts]);
+        //dd($carts);
 
 
         return redirect()->route('cart.cart-info')
@@ -135,6 +136,7 @@ class CartController extends Controller
     {
         // get cart info
         $carts = Session::get('carts');
+        //dd( $carts);
 
         // validate quanity of product -> Available (in-stock | out-stock)
 
@@ -143,7 +145,10 @@ class CartController extends Controller
         $dataOrder = [
             'user_id' => Auth()->id(),
             'status' => Order::STATUS[0],
+            'payment'=>$request->payment_method,
         ];
+
+        //dd(  $dataOrder );
 
         DB::beginTransaction();
 
@@ -157,13 +162,16 @@ class CartController extends Controller
                     $productId = $cart['id'];
                     $quantity = $cart['quantity'];
                     $priceId = $cart['price_id'];
+                    $promotionId = $cart['promotion_id'];
 
                     $orderDetail = [
                         'product_id' => $productId,
                         'order_id' => $orderId,
                         'price_id' => $priceId,
+                        'promotion_id' => $promotionId,
                         'quantity' => $quantity,
                     ];
+                    //dd( $orderDetail);
                     // save data into table order_details
                     OrderDetail::create($orderDetail);
                 }
@@ -174,7 +182,7 @@ class CartController extends Controller
             // remove session carts
             $request->session()->forget('carts');
 
-            return redirect()->route('home')->with('success', 'Your Order was successful!');
+            return redirect()->route('index')->with('success', 'Your Order was successful!');
         } catch (Exception $exception) {
             DB::rollBack();
 

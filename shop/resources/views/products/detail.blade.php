@@ -32,23 +32,51 @@
             </div>
             <div class="col-sm-7">
                 <div class="product-description">
-                    <form action="{{ route('cart.add-cart', $product->id) }}" method="POST">
+                    <form action="{{ route('cart.add-cart', $product->id) }}" method="POST" id="frm-add-cart">
                         @csrf
 
                         <input type="hidden" name="price_id" value="{{  $product->getPrice()->id }}">
-                        {{-- <input type="hidden" name="promotion_id" value="{{ $product->getPromotion()->id }}"> --}}
 
                         <div class="single-item-body">
                             <p class="single-item-title" style="font-size: 25px">{{$product->name  }}</p>
                             <div class="space20">&nbsp;</div>
 
                             <p class="single-item-price">
-                                    @php
-                                        $money = $product->getPrice()->price*(100 - 5)/100;
-                                    @endphp
-                                    <span>{{ number_format($money)}} VND</span>
+                                @php
+                                // get 1 price
+                                $get_price = $product->getPrice();
+                                $price = $get_price->price;
+                                // get 1 promotion
+                                $currentDate = date('Y-m-d');
+                                //dd( $currentDate);
+                                $get_promotion = $product->getPromotionLatest($product->id)->first();
+                                //dd($get_promotions);
+                                $discount = 0;
+                                if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                    $discount = $get_promotion->promotion->discount;
+                                }
+                                // var_dump($get_promotion);
+                                //var_dump('discount: ' . $discount);
+                                @endphp
+                                @if (!empty($discount))
+                                     @php
+                                         $money = $price * (100 - $discount)/100;
+                                     @endphp
+
+                                    <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                    <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                @else
+                                    <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                @endif
+
                             </p>
+                            @if (!empty($get_promotion->promotion))
+                                <input type="hidden" name="promotion_id" value="{{ $get_promotion->promotion->id }}">
+                            @else
+                                <input type="hidden" name="promotion_id" value="{{ null}}">
+                            @endif
                         </div>
+
 
                         <div class="clearfix"></div>
                         <div class="space20">&nbsp;</div>
@@ -56,12 +84,14 @@
                             <p>{{ $product->description}}</p>
                         </div>
                         <div class="space20">&nbsp;</div>
+
                         <div class="product-quantity">
                             <p>Quantity :
-                                <span><input type="number" name="quantity" required></span>
+                                <span><input type="number" name="quantity" id="quantity" min="1"   required></span>
+                                <button  type="submit">Add Cart</button>
                             </p>
                             {{-- <a class="add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></a> --}}
-                            <button type="submit">Add Cart</button>
+                            {{-- <button type="submit">Add Cart</button> --}}
 
                         </div>
                     </form>
@@ -95,15 +125,34 @@
                                     $get_price = $pr_re->getPrice();
                                     $price = $get_price->price;
                                     // get 1 promotion
-                                    // $get_promotion = $pr_re->getPromotion();
-                                    // $promotion = $get_promotion->discount;
-                                    $promotion = 5;
-                                    // money
-                                    $money = $price * (100 - $promotion)/100;
+                                    $currentDate = date('Y-m-d');
+                                    //dd( $currentDate);
+                                    $get_promotion = $pr_re->getPromotionLatest($pr_re->id)->first();
+                                    //dd($get_promotions);
+                                    $discount = 0;
+                                    if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                        $discount = $get_promotion->promotion->discount;
+                                    }
+                                    // var_dump($get_promotion);
+                                    //var_dump('discount: ' . $discount);
                                     @endphp
-                                    <span class="flash-del"> {{number_format($price) }} </span>
-                                    <span class="flash-sale">{{number_format($money) }}</span>
+                                    @if (!empty($discount))
+                                            @php
+                                                $money = $price * (100 - $discount)/100;
+                                            @endphp
+                                        <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                        <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                    @else
+                                        <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                    @endif
                                 </p>
+                                <div class="ribbon-wrapper">
+                                    @if (!empty($discount))
+                                        <div class="ribbon sale">Sale</div>
+                                    @endif
+
+                                </div>
+
                             </div>
                             <div class="single-item-caption">
                                 <a class="add-to-cart pull-left" href="{{ route('cart.add-cart', $product->id) }}"><i class="fa fa-shopping-cart"></i></a>
@@ -129,5 +178,7 @@
 @endpush
 
 @push('js')
+{{-- <script src="/js/carts/product-check-quantity.js"></script> --}}
+
 
 @endpush

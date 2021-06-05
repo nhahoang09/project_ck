@@ -17,9 +17,9 @@ class CreateProductPromotionTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('promotion_id');
-            $table->double('quantity');
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('promotion_id')->references('id')->on('promotions');
+
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreign('promotion_id')->references('id')->on('promotions')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

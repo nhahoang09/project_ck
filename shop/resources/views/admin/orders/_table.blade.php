@@ -1,6 +1,6 @@
 <table id="product-list" class="table table-bordered table-hover table-striped">
     <thead>
-        <>
+        <tr>
             <th>#</th>
             <th>Fullname</th>
 

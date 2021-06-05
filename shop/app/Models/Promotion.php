@@ -15,6 +15,7 @@ class Promotion extends Model
     protected $table = 'promotions';
 
     protected $fillable = [
+        'name',
         'discount',
         'begin_date',
         'end_date',
@@ -30,4 +31,8 @@ class Promotion extends Model
     // {
     //     return $this->belongsTo(Product::class);
     // }
+    public function productPromotion()
+    {
+        return $this->hasMany(ProductPromotion::class, 'promotion_id', 'id');
+    }
 }

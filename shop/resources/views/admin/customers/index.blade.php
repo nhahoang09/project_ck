@@ -21,7 +21,7 @@
 
 @section('content')
     {{-- form search --}}
-    {{-- @include('admin.orders._search') --}}
+    @include('admin.customers._search')
 
     {{-- show message --}}
     @include('errors.error')
@@ -36,7 +36,7 @@
                 <th>Phone</th>
                 <th>Address</th>
                 <th>Create Date</th>
-                <th>ListOrders</th>
+
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -47,10 +47,10 @@
                         <td>{{ $key+1 }}</td>
                         <td>{{ $customer->name }}</td>
                         <td>{{ $customer->email }}</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $customer->phone }}</td>
+                        <td>{{ $customer->address }}</td>
                         <td>{{ $customer->created_at }}</td>
-                        <td></td>
+
                         <td>
                             <form action="{{ route('admin.order.destroy', $customer->id) }}" method="post">
                                 @csrf

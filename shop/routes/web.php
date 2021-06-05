@@ -8,6 +8,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategorySearchController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CheckQuantityController;
+use App\Http\Controllers\CustomerController;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,9 +42,13 @@ require __DIR__.'/auth.php';
 Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
     Route::get('/detail/{id}', [ProductController::class, 'detail'])->name('detail');
     Route::get('/search', [ProductController::class, 'search'])->name('search');
+    Route::get('/check-quantity/{id}', [CheckQuantityController::class, 'checkQuantity'])->name('check-quantity');
+
 
 });
+
 // search category
+
 Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
     Route::get('/search/{id}', [CategorySearchController::class, 'search'])->name('search');
 
@@ -68,6 +77,16 @@ Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
 
 });
 
+// customer
+Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
+    Route::get('/profile', [CustomerController::class, 'profile'])->middleware(['auth'])->name('profile');
+    Route::get('/edit-profile', [CustomerController::class, 'editProfile'])->middleware(['auth'])->name('edit-profile');
+    Route::put('/update-profile/{id}', [CustomerController::class, 'updateProfile'])->middleware(['auth'])->name('update-profile');
+    Route::get('/change-password', [CustomerController::class, 'changePassword'])->middleware(['auth'])->name('change-password');
+    Route::post('/update-password', [CustomerController::class, 'updatePassword'])->middleware(['auth'])->name('update-password');
+});
+
+
 ////test mail
 // Route::get('send-mail', function () {
 
@@ -80,3 +99,4 @@ Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
 
 //     return "email send";
 // });
+

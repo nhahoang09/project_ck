@@ -67,9 +67,24 @@
 @endpush
 
 <div class="container">
+
+
+<div class="inner-header">
+    <div class="container">
+        <div class="pull-left">
+            <h6 class="inner-title">Đăng nhập</h6>
+        </div>
+        <div class="pull-right">
+            <div class="beta-breadcrumb font-large">
+                <a href="{{ route('index') }}">Home</a> / <span>Đăng nhập</span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
     <div id="content">
 
-        @csrf
         <div class="login-form">
             <form action="{{ route('login') }}" method="post" class="beta-form-checkout">
                 @csrf
@@ -97,5 +112,6 @@
 
     </div> <!-- #content -->
 </div> <!-- .container -->
+
 
 @endsection

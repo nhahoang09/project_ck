@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Product extends Model
 {
@@ -68,10 +69,41 @@ class Product extends Model
     //         //->orwhere('discount','desc')
     //         ->first();
     // }
-    public function getPromotion() {
+    // public function getPromotion() {
+    //     return $this->belongsToMany(Promotion::class, 'product_promotion', 'product_id', 'promotion_id')
+    //     // return $this->belongsToMany(ProductPromotion::class);
+    //     ->first();
+    // }
+
+    public function productPromotion()
+    {
+        return $this->hasMany(ProductPromotion::class, 'product_id', 'id');
+    }
+
+    public function getPromotions() {
+
         return $this->belongsToMany(Promotion::class, 'product_promotion', 'product_id', 'promotion_id')
-        // return $this->belongsToMany(ProductPromotion::class);
-        ->first();
+        ;
+    }
+
+    // public function getPromotionLatest($productId)
+    // {
+    //     Log::info('productID ' . $productId);
+    //     // dd(1111);
+    //     return $this->productPromotion()
+    //     ->where('product_id', $productId)
+    //     ->orderBy('created_at', 'desc')
+    //     ->first();
+    // }
+
+
+    // chu y doan code nay nhe
+    public function getPromotionLatest($productId)
+    {
+        return $this->hasOne(ProductPromotion::class, 'product_id', 'id')
+            ->where('product_id', $productId)
+             //->orderBy('created_at', 'desc')
+            ;
     }
 
 

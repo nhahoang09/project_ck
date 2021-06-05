@@ -42,32 +42,39 @@
                                     <div class="single-item-body">
                                         <p class="single-item-title">{{ $product->name }}</p>
                                         <p class="single-item-price">
-                                            {{-- @php
-                                            $prices = $product['prices'];
-                                            $promotions = $product['promotions'];
-                                            @endphp
-                                            @foreach ($prices as $price)
-                                            <span class="flash-del"> {{$price['price'] }} </span>
-                                            @endforeach
-                                            @foreach ($promotions as $promotion)
-                                            @php
-                                            $money = $price['price'] * (100 - $promotion['discount'])/100;
-                                            @endphp
-                                            <span class="flash-sale"> {{ $money}}</span>
-                                            @endforeach --}}
                                             @php
                                             // get 1 price
                                             $get_price = $product->getPrice();
                                             $price = $get_price->price;
                                             // get 1 promotion
-                                            $get_promotion = $product->getPromotion();
-                                            $promotion = $get_promotion->discount;
-                                            // money
-                                            $money = $price * (100 - $promotion)/100;
+                                            $currentDate = date('Y-m-d');
+                                            //dd( $currentDate);
+                                            $get_promotion = $product->getPromotionLatest($product->id)->first();
+                                            //dd($get_promotions);
+                                            $discount = 0;
+                                            if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                                $discount = $get_promotion->promotion->discount;
+                                            }
+                                            // var_dump($get_promotion);
+                                            //var_dump('discount: ' . $discount);
                                             @endphp
-                                            <span class="flash-del"> {{number_format($price) }} </span>
-                                            <span class="flash-sale">{{number_format($money) }}</span>
+                                            @if (!empty($discount))
+                                                    @php
+                                                        $money = $price * (100 - $discount)/100;
+                                                    @endphp
+                                                <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                                <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                            @else
+                                                <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                            @endif
                                         </p>
+                                    </div>
+
+                                    <div class="ribbon-wrapper">
+                                        @if (!empty($discount))
+                                            <div class="ribbon sale">Sale</div>
+                                        @endif
+
                                     </div>
                                     <div class="single-item-caption">
                                         <a class="add-to-cart pull-left" href="{{ route('cart.add-cart', $product->id) }}"><i class="fa fa-shopping-cart"></i></a>
@@ -102,32 +109,38 @@
                                     <div class="single-item-body">
                                         <p class="single-item-title">{{ $pr->name }}</p>
                                         <p class="single-item-price">
-                                            {{-- @php
-                                            $prices = $pr['prices'];
-                                            $promotions = $pr['promotions'];
-                                            @endphp
-                                            @foreach ($prices as $price)
-                                            <span class="flash-del"> {{$price['price'] }} </span>
-                                            @endforeach
-                                            @foreach ($promotions as $promotion)
                                             @php
-                                            $money = $price['price'] * (100 - $promotion['discount'])/100;
-                                            @endphp
-                                            <span class="flash-sale"> {{ $money}}</span>
-                                            @endforeach --}}
-                                            @php
-                                            // get 1 price
-                                            $get_price = $pr->getPrice();
-                                            $price = $get_price->price;
-                                            // get 1 promotion
-                                            $get_promotion = $pr->getPromotion();
-                                            $promotion = $get_promotion->discount;
-                                            // money
-                                            $money = $price * (100 - $promotion)/100;
-                                            @endphp
-                                            <span class="flash-del"> {{number_format($price) }} </span>
-                                            <span class="flash-sale">{{number_format($money) }}</span>
+                                                // get 1 price
+                                                $get_price = $pr->getPrice();
+                                                $price = $get_price->price;
+                                                // get 1 promotion
+                                                $currentDate = date('Y-m-d');
+                                                //dd( $currentDate);
+                                                $get_promotion = $pr->getPromotionLatest($pr->id)->first();
+                                                //dd($get_promotions);
+                                                $discount = 0;
+                                                if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
+                                                    $discount = $get_promotion->promotion->discount;
+                                                }
+                                                // var_dump($get_promotion);
+                                                //var_dump('discount: ' . $discount);
+                                                @endphp
+                                            @if (!empty($discount))
+                                                    @php
+                                                        $money = $price * (100 - $discount)/100;
+                                                    @endphp
+                                                <span class="flash-del"> {{ number_format($price) }} VNĐ </span>
+                                                <span class="flash-sale">{{ number_format($money) }} VNĐ</span>
+                                            @else
+                                                <span class="flash-sale"> {{number_format($price) }} VNĐ</span>
+                                            @endif
                                         </p>
+                                    </div>
+                                    <div class="ribbon-wrapper">
+                                        @if (!empty($discount))
+                                            <div class="ribbon sale">Sale</div>
+                                        @endif
+
                                     </div>
                                     <div class="single-item-caption">
                                         <a class="add-to-cart pull-left" href="{{ route('cart.add-cart', $pr->id) }}"><i class="fa fa-shopping-cart"></i></a>

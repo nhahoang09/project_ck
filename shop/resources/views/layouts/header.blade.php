@@ -33,7 +33,7 @@
                                        <a href="{{ route('order.list-order') }}"><button class="btn btn-dark"> Lịch sử mua hàng</button></a>
                                    </li>
                                    <li class="dropdown-item">
-                                       <a  href="#"><button class="btn btn-dark"> Cập nhật tài khoản</button></a>
+                                       <a  href="{{ route('customer.profile')}}"><button class="btn btn-dark"> Cập nhật tài khoản</button></a>
                                    </li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -73,7 +73,7 @@
                     <div class="space10">&nbsp;</div>
                     <div class="beta-comp">
                         <form role="search" method="get" id="searchform" action="{{ route('product.search') }}">
-                            <input type="text" value="" name="key" id="s" placeholder="Nhập từ khóa..." />
+                            <input type="text" value="{{ request()->get('key') }}" name="key" id="s" placeholder="Nhập từ khóa..." />
                             <button class="fa fa-search" type="submit" id="searchsubmit"></button>
                         </form>
                     </div>
