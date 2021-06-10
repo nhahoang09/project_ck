@@ -35,8 +35,6 @@
                 <th>Discount</th>
                 <th>Quantity</th>
                 <th>Money</th>
-
-                <th colspan="5" class="center">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -49,11 +47,22 @@
                             <img src="{{ asset($order_detail->thumbnail) }}" alt="{{ $order_detail->name }}" class="img-fluid" style="width: 80px; height: 60px;">
                         </td>
                         <td>{{number_format($order_detail->price) .' VNĐ'  }}</td>
-                        <td></td>
+                        @php
+                            $discount =0;
+                        if($order_detail->promotion_id != null){
+                            $discount = $order_detail->promotion->discount;
+                        }
+
+                        @endphp
+                        @if ($discount == 0)
+                            <td>{{ 0 . "%" }}</td>
+                        @else
+                            <td>{{ $discount . "%" }}</td>
+                        @endif
                         <td>{{ $order_detail->quantity }}</td>
                         <td>
                             @php
-                                $money =  $order_detail->quantity*$order_detail->price*(100-5)/100;
+                                $money =  $order_detail->quantity*$order_detail->price*(100 - $discount)/100;
                                 $total+=$money;
                             @endphp
                             {{ number_format($money) .' VNĐ'  }}

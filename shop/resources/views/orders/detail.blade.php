@@ -25,13 +25,14 @@
 
         <div class="table-responsive">
             <!-- Shop Products Table -->
-            <table id="product-list" class="table table-striped table-bordered table-hover">
+            <table class="shop_table beta-shopping-cart-table">
                 <thead class="table-dark ">
                     <tr>
                         <th>#</th>
                         <th>Product Name</th>
                         <th>Thumbnail</th>
                         <th>Price</th>
+                        <th>Discount</th>
                         <th>Quantity</th>
                         <th>Money</th>
 
@@ -44,31 +45,40 @@
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $order_detail->name }}</td>
                                 <td>
-                                    <img src="{{ asset($order_detail->thumbnail) }}" alt="{{ $order_detail->name }}" class="img-fluid" style="width: 40px; height: auto;">
+                                    <img src="{{ asset($order_detail->thumbnail) }}" alt="{{ $order_detail->name }}" class="img-fluid" style="width: 80px; height:60px;">
                                 </td>
                                 <td>{{ $order_detail->price }}</td>
+                                @php
+                                $discount = $order_detail->discount;
+                                @endphp
+                                @if ($discount == null)
+                                    <td>{{ 0 . "%" }}</td>
+                                @else
+                                    <td>{{ $discount . "%" }}</td>
+                                @endif
                                 <td>{{ $order_detail->quantity }}</td>
 
-                                <td>
-                                    @php
-                                        $money =  $order_detail->quantity*$order_detail->price*(100-5)/100;
-                                        $total+=$money;
-                                    @endphp
-                                    {{ $money }}
-                                </td>
-
-
+                                @php
+                                    $money =  $order_detail->quantity*$order_detail->price*(100-$discount)/100;
+                                    $total+=$money;
+                                @endphp
+                                <td>{{ number_format($money) . "VNĐ" }}</td>
                             </tr>
                         @endforeach
                     @endif
                 </tbody>
+
+
+
             </table>
+            <div class="text-right">
+                <h4>Total: {{ number_format($total) .' VNĐ'  }}</h4>
+            </div>
             <td>
-                <a href="{{ route('order.list-order') }}" class="btn btn-secondary">Back</a>
+                <a href="{{ route('order.list-order') }}" class="btn btn-primary">Back</a>
             </td>
         <div class="clearfix"></div>
         </div>
-
 
     </div> <!-- #content -->
 </div> <!-- .container -->

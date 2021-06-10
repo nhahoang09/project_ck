@@ -64,6 +64,13 @@
 
 @push('css')
 <link rel="stylesheet" href="/css/login.css">
+<style>
+    .form{
+        border: 1px solid black;
+        padding: 30px 40px;
+        border-radius: 5px;
+    }
+</style>
 @endpush
 
 <div class="container">
@@ -86,9 +93,10 @@
     <div id="content">
 
         <div class="login-form">
+           <div class="form">
             <form action="{{ route('login') }}" method="post" class="beta-form-checkout">
                 @csrf
-                <h4>Đăng nhập</h4>
+                <h4 style= "text-align: center">Đăng nhập</h4>
                 <div class="space20">&nbsp;</div>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Username"  type="email" name="email" :value="old('email')" required autofocus>
@@ -101,13 +109,13 @@
                 </div>
                 <div class="clearfix">
                     @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" style="color: #66AFE0" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
                 </div>
             </form>
-
+        </div>
         </div>
 
     </div> <!-- #content -->

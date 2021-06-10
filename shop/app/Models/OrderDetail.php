@@ -45,4 +45,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Price::class, 'price_id', 'id');
     }
+
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
+    }
 }

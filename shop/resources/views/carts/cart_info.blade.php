@@ -5,6 +5,8 @@
 
 @section('content')
 
+
+<section class="list-product">
 <div class="inner-header">
     <div class="container">
         <div class="pull-left">
@@ -24,6 +26,14 @@
         @if(!empty($products))
         <div class="table-responsive">
             <!-- Shop Products Table -->
+            <form action="{{route('cart.update-cart')}}"  method="POST">
+            @csrf
+            @if(Session::has('error'))
+                <div class="alert alert-danger">{{ Session::get('error') }}</div>
+			@endif
+            @if(Session::has('success'))
+                <div class="alert alert-success">{{ Session::get('success') }}</div>
+			@endif
             <table class="shop_table beta-shopping-cart-table" cellspacing="0">
                 <thead>
                     <tr>
@@ -31,10 +41,12 @@
                         <th class="product-price">Price</th>
                         <th class="product-quantity">Quantity</th>
                         <th class="product-subtotal">Total</th>
+                        <th class="product-subtotal">Update</th>
                         <th class="product-remove">Remove</th>
                     </tr>
                 </thead>
                 <tbody>
+                
                     @foreach ($products as $key => $product)
                     <tr class="cart_item">
                         <td class="product-name">
@@ -72,16 +84,7 @@
                             @endif
                         </td>
                         <td class="product-quantity">
-                            {{-- {{ number_format($carts[$product->id]['quantity']) }} --}}
-                            <form action=" {{route('cart.update-cart',$product->id)}}" method="POST">
-                                @csrf
-                                <div class="cart-plus-minus-button">
-                                    {{-- <input type="button" value="-" class="button-minus" data-field="quantity"> --}}
-                                    <input class="" style="text-align: center" type="text" id="quantity" name="quantity" value=" {{ $carts[$product->id]['quantity']}}">
-                                    {{-- <input type="button" value="+" class="button-plus" data-field="quantity"> --}}
-                                </div>
-                                <button type="submit" class="beta-btn primary" name="update_cart">Update Cart </button>
-                            </form>
+                            <input style="text-align: center; "  type="number" id="quantity" name="cart_quantity[{{ $carts[$product->id]['id']}}]" min= 1 value="{{ $carts[$product->id]['quantity']}}">
                         </td>
 
                         <td class="product-subtotal">
@@ -90,6 +93,15 @@
                                 $total+=$money;
                             @endphp
                             <span class="amount">{{ number_format($money) }} VND</span>
+                        </td>
+                        <td>
+                            {{-- <form action=" {{route('cart.update-cart',$product->id)}}" method="POST" class="frm-cart-update-quantity">
+                                @csrf
+                                @method('PUT')
+
+                                <button type="submit" class="beta-btn primary" name="update_cart">  <span class="glyphicon glyphicon-pencil"></span></i></button>
+                            </form> --}}
+
                         </td>
 
                         <td class="product-remove">
@@ -102,14 +114,18 @@
                 <tfoot>
                     <tr>
                         <td colspan="6" >
+                            <a href=""><button type="submit"  class="beta-btn primary" name="">Cập nhật giỏ hàng </button></a>
                             <a href="{{ route('index') }}"><button type="button"  class="beta-btn primary" name="">Tiếp tục mua hàng </button></a>
                             {{-- <button type="button" class="beta-btn primary" data-bs-toggle="modal" data-bs-target="#modal-send-code">Check out</button> --}}
                             <a href="#" class="beta-btn primary" data-toggle="modal" data-target="#basicModal">Check out</a>
                             {{-- <a href="{{ route('cart.checkout') }}"><button type="button"  class="beta-btn primary" name=""> Đặt hàng </button></a> --}}
+
                         </td>
                     </tr>
                 </tfoot>
             </table>
+
+        </form>
 
             <!-- End of Shop Table Products -->
         </div>
@@ -121,8 +137,8 @@
             <div class="cart-totals pull-right" >
                 <div class="cart-totals-row"><h5 class="cart-total-title">Cart Totals</h5></div>
                 <div class="cart-totals-row"><span>Cart Total:</span> <span>{{ number_format($total)}} VNĐ</span></div>
-                <div class="cart-totals-row"><span>Shipping:</span> <span>{{ number_format($ship = $total*0.05)}} VNĐ</span></div>
-                <div class="cart-totals-row"><span>Order Total:</span> <span>{{ number_format($total+$ship)}} VNĐ</span></div>
+                <div class="cart-totals-row"><span>Shipping:</span> <span> Free ship</span></div>
+                <div class="cart-totals-row"><span>Order Total:</span> <span>{{ number_format($total)}} VNĐ</span></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -131,6 +147,7 @@
     </div> <!-- #content -->
 </div> <!-- .container -->
 
+</section>
     {{-- import modal --}}
     @include('carts.parts.modal_send_code')
     {{-- tesst --}}
@@ -141,6 +158,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('css/carts/cart-info.css') }}">
+
 @endpush
 
 @push('js')
@@ -162,6 +180,45 @@
         modal.find('.modal-title').text('New message to ' + recipient)
         modal.find('.modal-body input').val(recipient)*/
      })
+    </script>
+    <script>
+        $(document).ready(function () {
+
+
+            $(document).on('keyup', 'input[name=quantity]', function(e){
+                if(e.keyCode == 13) {
+                    $(this).closest('tr').find('.frm-cart-update-quantity').trigger('submit');
+                }
+            });
+
+            $(document).on('submit', '.frm-cart-update-quantity', function (event) {
+                // block event submit
+                event.preventDefault();
+                /**
+                 * process form and send AJAX Data
+                 * Define variable
+                 */
+                    let csrf = $(this).find('input[name=_token]').val();
+                    let quantity = $(this).closest('tr').find('input[name=quantity]').val();
+                    let url = $(this).attr('action');
+
+                // validate quantity
+                if (quantity <= 0) {
+                    alert.error('Quantity is greater 0.');
+                } else {
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        data: {
+                            _token: csrf,
+                            quantity: quantity
+                        },
+                        dataType: 'json'
+                    });
+                }
+            });
+
+        })
     </script>
 
 

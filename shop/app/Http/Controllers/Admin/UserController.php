@@ -21,7 +21,8 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = Admin::where('role_id','!=',1)->paginate(8);
+        $users = Admin::with('role')
+        ->where('role_id','!=',1)->paginate(8);
         return view('admin.users.index',compact('users'));
     }
 

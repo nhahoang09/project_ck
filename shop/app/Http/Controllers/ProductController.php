@@ -30,6 +30,7 @@ class ProductController extends Controller
     //     ])->findOrFail($id);
         $product = Product::findOrFail($id);
 
+
         $product_relates = Product::where('category_id',$product->category_id)
                                 ->where('id','!=',$id)->get();
         return view('products.detail', compact('product','product_relates'));

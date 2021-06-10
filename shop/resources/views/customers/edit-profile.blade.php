@@ -25,11 +25,13 @@
         <form action="{{ route('customer.update-profile',$user->id) }}" method="post">
             @csrf
             @method('PUT')
-                <div class="row">
-                    <div class="col-lg-4 col-lg-offset-4">
+                <div class="edit-profile">
+                    {{-- <div class="col-lg-4 col-lg-offset-4"> --}}
+                        <h4 style= "text-align: center">Cập nhật tài khoản</h4>
+                        <div class="space40">&nbsp;</div>
                         <div class="form-inline">
                             <label for="name">Họ tên:</label>
-                            <input type="text" name="name" id="name" value="{{ $user->name }}"  required>
+                            <input type="text"  name="name" id="name" value="{{ $user->name }}"  required>
                         </div>
                         @error('name')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -64,10 +66,12 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div class="space20">&nbsp;</div>
-                    </div>
-                    <div class="col-lg-4 col-lg-offset-4 text-center">
-                        <button class="btn btn-primary" type="submit">Cập nhật </button>
-                    </div>
+                    {{-- </div> --}}
+                    {{-- <div class="col-lg-4 col-lg-offset-4 text-center"> --}}
+                    <div class="text-center">
+                        <button class="btn btn-primary"  type="submit">Cập nhật </button>
+                    {{-- </div> --}}
+                </div>
                 </div>
                 <div class="clearfix"></div>
         </form>
@@ -79,6 +83,17 @@
 
 @push('css')
     {{-- <link rel="stylesheet" href="/backend/css/orders/order-list.css"> --}}
+    <style>
+        .edit-profile{
+        width: 400px;
+        margin: 50px auto;
+        font-size: 15px;
+        border: 1px solid#3276b1;
+        padding: 30px 40px;
+        border-radius: 5px;
+
+    }
+    </style>
 @endpush
 
 @push('js')

@@ -1,23 +1,25 @@
 $(document).ready(function() {
     // check quantity
-    $('#quantity').on('change', function() {
+    $('#product-quantity').on('change', function() {
         // get value of input
         let quantity = $(this).val();
 
         // call function processCheckQuantity
-        processCheckQuantity(quantity, '#quantity');
+        processCheckQuantity(quantity, '#product-quantity');
     });
 
     // process check quantity and submit form
-    $('#frm-add-cart').on('submit', function(evt) {
+    $('#btn-add-cart').on('click', function(evt) {
         // block submit event
         evt.preventDefault();
 
         // get value of input
-        let quantity = $('#quantity').val();
+        let quantity = $('#product-quantity').val();
 
         // call function processCheckQuantity
-        processCheckQuantity(quantity, '#quantity');
+        processCheckQuantity(quantity, '#product-quantity');
+        // submit form
+        $('#frm-add-cart').submit();
     });
 });
 
@@ -37,19 +39,23 @@ function processCheckQuantity(quantity, selector) {
         },
         success: function(response) {
             // success is show success message
-            console.log(response);
+
             // Display a success toast, with a title
             alert(response.message);
 
             // set border red for input quantity
-            $(selector).removeClass('border border-danger');
+            //$(selector).removeClass('border border-danger');
         },
         error: function(err) {
             // error is show error message
+
             alert(err.responseJSON.message);
 
+            window.location.href = "{{ route('product') }}";
+
+
             // set border red for input quantity
-            $(selector).addClass('border border-danger');
+            //$(selector).addClass('border border-danger');
         },
         dataType: 'json'
     });

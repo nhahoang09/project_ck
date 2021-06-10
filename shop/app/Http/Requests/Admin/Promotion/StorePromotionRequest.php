@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Admin\Promotion;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class StorePromotionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            // category_name : input name="category_name"
-            // required: la rule bat buoc nhap 
-            'category_name' => 'required',
+            //
+            'name' => 'required',
+            'discount' => 'required|numeric',
         ];
     }
 }

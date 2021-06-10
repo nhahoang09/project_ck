@@ -123,6 +123,15 @@
 @push('css')
 
    <link rel="stylesheet" href="/css/customers/change-password.css">
+   <style>
+       .login-form{
+    border: 1px solid black;
+    padding: 30px 40px;
+    border-radius: 5px;
+
+   </style>
+
+}
 @endpush
 
 @push('js')

@@ -61,7 +61,8 @@ class OrderController extends Controller
         $order_details =  DB::table('order_details')->where('order_id','=',$id)
         ->join('products', 'order_details.product_id', '=', 'products.id')
         ->join('prices', 'order_details.price_id', '=', 'prices.id')
-        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity',)
+        ->leftjoin('promotions','order_details.promotion_id','=','promotions.id')
+        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity','promotions.discount')
         ->get();
         return view('orders.detail',compact('order_details','total'));
     }

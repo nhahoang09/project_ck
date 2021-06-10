@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InfoOrderShipped;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,21 +33,32 @@ class CartController extends Controller
         //dd($product);
 
         #check have param $id ?
-        $newProduct = [
-            'id' => $id,
-            'quantity' => $request->quantity,
-            'price_id' => $request->price_id,
-            'promotion_id' => $request->promotion_id
-        ];
 
-        $carts[$id] = $newProduct;
-        // set data for SESSION
-        session(['carts' => $carts]);
-        //dd($carts);
+         //// get quantity from Form Request
+         $quantity = $request->quantity;
 
+         // get quantity from data
+         $product = Product::findOrFail($id);
+         $quantityDB = $product->quantity;
 
-        return redirect()->route('cart.cart-info')
-            ->with('success', 'Add Product to Cart successful!');
+         if ($quantity < $quantityDB) {
+            $newProduct = [
+                'id' => $id,
+                'quantity' => $request->quantity,
+                'price_id' => $request->price_id,
+                'promotion_id' => $request->promotion_id
+            ];
+
+            $carts[$id] = $newProduct;
+            // set data for SESSION
+            session(['carts' => $carts]);
+            //dd($carts);
+            return redirect()->route('cart.cart-info')
+                ->with('success', 'Add Product to Cart successful!');
+
+        }else{
+            return redirect()->back()->with('error','Please re-enter the quantity!');
+        }
     }
 
     public function getCartInfo(Request $request)
@@ -79,22 +91,38 @@ class CartController extends Controller
 
     }
 
-    public function updateCart($id,Request $request)
+    public function updateCart(Request $request)
     {
         //get data from SESSION
         $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
-        //dd($carts);
-       // $data['carts'] = $carts;
 
-       $updateProduct = [
-            'quantity' => $request->quantity,
-        ];
-        $carts[$id]['quantity'] =  $updateProduct['quantity'];
-        //dd($carts[$id]);
-        session(['carts' => $carts]);
-        //dd($carts);
 
-        return redirect()->route('cart.cart-info');
+        // get quantity from Form Request
+       $quantity = $request->all();
+       //dd($quantity);
+       if (!empty($carts)) {
+            foreach( $quantity['cart_quantity'] as $key => $qty){
+
+                // get quantity from data
+                $product = Product::findOrFail($key);
+                $quantityDB = $product->quantity;
+                // so sánh
+                if($qty<$quantityDB){
+                    foreach ($carts as $id => $value) {
+                        if ($value['id'] == $key) {
+                            $carts[$id]['quantity'] = $qty;
+                        }
+                    }
+                }
+                else{
+                    return redirect()->back()->with('error','Quantity exceeds stock. Please re-enter the quantity !');
+                }
+            }
+            //update session
+            session(['carts' => $carts]);
+            //dd($carts);
+            return redirect()->back()->with('success','Update quantity success!');
+        }
     }
     public function removeCart($id,Request $request)
     {
@@ -134,9 +162,12 @@ class CartController extends Controller
 
     public function checkoutComplete(Request $request)
     {
+        $data = [];
         // get cart info
         $carts = Session::get('carts');
         //dd( $carts);
+
+
 
         // validate quanity of product -> Available (in-stock | out-stock)
 
@@ -153,9 +184,11 @@ class CartController extends Controller
         DB::beginTransaction();
 
         try {
-            // save data into table orders
+            //save data into table orders
             $order = Order::create($dataOrder);
             $orderId = $order->id;
+           //$orderId = 26;
+
 
             if (!empty($carts)) {
                 foreach ($carts as $cart) {
@@ -176,18 +209,47 @@ class CartController extends Controller
                     OrderDetail::create($orderDetail);
                 }
             }
-
             DB::commit();
 
             // remove session carts
             $request->session()->forget('carts');
 
-            return redirect()->route('index')->with('success', 'Your Order was successful!');
+            //data into mail
+            $order_details =  DB::table('order_details')->where('order_id','=',$orderId )
+            ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->join('prices', 'order_details.price_id', '=', 'prices.id')
+            ->leftjoin('promotions','order_details.promotion_id','=','promotions.id')
+            ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity','promotions.discount')
+            ->get();
+
+            $order= DB::table('orders')->where('orders.id','=',$orderId)
+            ->join('users','orders.user_id','=','users.id')
+            ->select('orders.id','orders.payment','orders.created_at','users.name','users.address','users.phone')
+            ->first();
+
+            // $data['order']=$order;
+            $email = Auth::user()->email;
+            $data = [
+               'order_details'=>$order_details,
+               'order'=>$order,
+           ];
+           //dd($data);
+
+            // send mail info order
+            Mail::send('emails.orders.info_order_shipped', $data, function ($message) use($email) {
+                $message->to($email)->subject('Send Order Info');
+            });
+
+            return redirect()->route('cart.order-complete')->with('success', 'Your Order was successful!');
         } catch (Exception $exception) {
             DB::rollBack();
 
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function orderComplete(){
+        return view('carts.order_complete');
     }
 
     public function sendVerifyCode(Request $request)
@@ -265,4 +327,8 @@ class CartController extends Controller
             return response()->json(['message' => $exception->getMessage()]);
         }
     }
+
+
+
+
 }

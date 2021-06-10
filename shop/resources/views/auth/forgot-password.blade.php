@@ -44,6 +44,14 @@
 
 @push('css')
 <link rel="stylesheet" href="/css/login.css">
+<style>
+    .login-form{
+        border: 1px solid black;
+        padding: 30px 40px;
+        border-radius: 5px;
+    }
+
+</style>
 @endpush
 
 <div class="container">

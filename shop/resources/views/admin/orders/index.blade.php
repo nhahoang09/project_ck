@@ -21,7 +21,7 @@
 
 @section('content')
     {{-- form search --}}
-    {{-- @include('admin.orders._search') --}}
+    @include('admin.orders._search')
 
     {{-- show message --}}
     @include('errors.error')

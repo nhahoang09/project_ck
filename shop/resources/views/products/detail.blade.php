@@ -32,7 +32,7 @@
             </div>
             <div class="col-sm-7">
                 <div class="product-description">
-                    <form action="{{ route('cart.add-cart', $product->id) }}" method="POST" id="frm-add-cart">
+                    <form action="{{ route('cart.add-cart', $product->id) }}" method="POST"  id="frm-add-cart">
                         @csrf
 
                         <input type="hidden" name="price_id" value="{{  $product->getPrice()->id }}">
@@ -50,7 +50,7 @@
                                 $currentDate = date('Y-m-d');
                                 //dd( $currentDate);
                                 $get_promotion = $product->getPromotionLatest($product->id)->first();
-                                //dd($get_promotions);
+                                //dd($get_promotion);
                                 $discount = 0;
                                 if (!empty($get_promotion->promotion)&&($get_promotion->promotion->end_date>= $currentDate)) {
                                     $discount = $get_promotion->promotion->discount;
@@ -86,9 +86,14 @@
                         <div class="space20">&nbsp;</div>
 
                         <div class="product-quantity">
+                            @if(Session::has('error'))
+                            <div class="alert alert-danger" style="font-weight: bold;" >There are currently {{ $product->quantity}} products. {{ Session::get('error') }}</div>
+                            {{-- <p class="alert text-danger" style="color: red;">{{ }}</p> --}}
+                            @endif
                             <p>Quantity :
-                                <span><input type="number" name="quantity" id="quantity" min="1"   required></span>
-                                <button  type="submit">Add Cart</button>
+                                <span><input style="text-align: center" type="number" name="quantity" id="product-quantity" min="1" value="1"  required></span>
+
+                                <button type="submit" id="btn-add-cart" class="btn btn-primary">Add Cart</button>
                             </p>
                             {{-- <a class="add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></a> --}}
                             {{-- <button type="submit">Add Cart</button> --}}
@@ -178,7 +183,8 @@
 @endpush
 
 @push('js')
-{{-- <script src="/js/carts/product-check-quantity.js"></script> --}}
+
+{{-- <script src="{{ asset('js/carts/check-quantity.js') }}"></script> --}}
 
 
 @endpush

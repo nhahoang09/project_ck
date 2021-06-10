@@ -42,7 +42,7 @@ require __DIR__.'/auth.php';
 Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
     Route::get('/detail/{id}', [ProductController::class, 'detail'])->name('detail');
     Route::get('/search', [ProductController::class, 'search'])->name('search');
-    Route::get('/check-quantity/{id}', [CheckQuantityController::class, 'checkQuantity'])->name('check-quantity');
+   // Route::get('{id}/check-quantity', [CheckQuantityController::class, 'checkQuantity'])->name('check-quantity');
 
 
 });
@@ -60,11 +60,12 @@ Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
     Route::get('/cart-info', [CartController::class, 'getCartInfo'])->name('cart-info');//->middleware('check_order_step_by_step');
     Route::post('cart/{id}', [CartController::class, 'addCart'])->name('add-cart');
 
-    Route::post('/update-cart/{id}',[CartController::class,'updateCart'])->name('update-cart');
+    // Route::put('/update-cart/{id}',[CartController::class,'updateCart'])->name('update-cart');
+    Route::post('/update-cart',[CartController::class,'updateCart'])->name('update-cart');
     Route::get('/remove-cart/{id}',[CartController::class,'removeCart'])->name('remove-cart');
-
-    Route::get('checkout', [CartController::class, 'checkout'])->name('checkout')->middleware('check_order_step_by_step');
+    Route::get('checkout', [CartController::class, 'checkout'])->name('checkout');//->middleware('check_order_step_by_step');
     Route::post('checkout-complete', [CartController::class, 'checkoutComplete'])->name('checkout-complete');
+    Route::get('/order-complete', [CartController::class, 'orderComplete'])->name('order-complete');//
     Route::post('send-verify-code', [CartController::class, 'sendVerifyCode'])->middleware(['auth'])->name('send-verify-code');
     Route::post('confirm-verify-code', [CartController::class, 'confirmVerifyCode'])->middleware(['auth'])->name('confirm-verify-code');
 });
@@ -100,3 +101,6 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 //     return "email send";
 // });
 
+
+/// test
+///Route::get('/view-test',[CartController::class,'view_test'])->name('view_test');

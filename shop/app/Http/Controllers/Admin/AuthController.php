@@ -64,7 +64,7 @@ class AuthController extends Controller
         {
             $user = auth()->guard('admin')->user();
 
-            \Session::put('success','You are Login successfully!!');
+           // \Session::put('success','You are Login successfully!!');
             return redirect()->route('admin.dashboard');
 
         } else {

@@ -152,31 +152,43 @@
                                 </div>
                              </div>
                         </div>
-                        <div class="box">
+                        {{-- <div class="box">
                             <div class="content registerBox" style="display:none;">
                              <div class="form">
-                                <form method="" html="{:multipart=>true}" data-remote="true" action="" accept-charset="UTF-8">
+                                <form method="POST" data-remote="true" action="{{ route('register') }}" accept-charset="UTF-8">
+                                @csrf
                                 <input id="email" class="form-control" type="text" placeholder="Email" name="email">
                                 <input id="password" class="form-control" type="password" placeholder="Password" name="password">
-                                <input id="password_confirmation" class="form-control" type="password" placeholder="Repeat Password" name="password_confirmation">
+                                <input id="password_confirmation" class="form-control" type="password" placeholder="Repeat Password" name="confirm-password">
+                                <div class="form-group mb-5">
+                                    <div>
+                                        <input type="radio" name="role_id" value="2" checked id="role_shipper-2">
+                                        <label for="role_shipper-2">Shippper</label>
+                                        <input type="radio" name="role_id" value="3"   id="role_other-">
+                                        <label for="role_other-">Other</label>
+                                    </div>
+                                </div> --}}
+
                                 {{-- <input class="btn btn-default btn-register" type="button" value="Create account" name="commit"> --}}
-                                <button class="btn btn-default btn-login" type="submit">Create account</button>
+
+                                {{-- <button class="btn btn-default btn-login" type="submit">Create account</button>
                                 </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <div class="forgot login-footer">
                             <span>Looking to
-                                 <a href="javascript: showRegisterForm();">create an account</a>
+                                 {{-- <a href="javascript: showRegisterForm();">create an account</a> --}}
+                                <a href="{{ route('admin.register') }}">create an account</a>
                             ?</span>
                         </div>
-                        <div class="forgot register-footer" style="display:none">
+                        {{-- <div class="forgot register-footer" style="display:none">
                              <span>Already have an account?</span>
                              <a href="javascript: showLoginForm();">Login</a>
 
-                        </div>
+                        </div> --}}
                     </div>
     		      </div>
 		      </div>

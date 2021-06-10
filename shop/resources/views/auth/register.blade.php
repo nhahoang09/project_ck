@@ -86,7 +86,7 @@
             <form action="{{ route('register') }}" method="post" class="beta-form-checkout">
                 @csrf
                 {{-- @method('PUT') --}}
-                <h4>Đăng ký</h4>
+                <h4 style="text-align: center">Đăng ký</h4>
                 <div class="space20">&nbsp;</div>
                 <div class="form-group">
                     <label for="email">Name:</label>
@@ -99,7 +99,7 @@
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="text" class="form-control" placeholder="Eamail"  type="email" name="email" :value="old('email')" required autofocus>
+                    <input type="text" class="form-control" placeholder="Email"  type="email" name="email" :value="old('email')" required autofocus>
                 </div>
                 @error('email')
                 <div class="alert alert-danger">{{ $message }}</div>
@@ -149,7 +149,7 @@
                 </div>
                 <div class="clearfix">
                     @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" style="color: #66AFE0" href="{{ route('login') }}">
                         {{ __('Already have an account? Login') }}
                     </a>
                 @endif
@@ -165,6 +165,14 @@
 @push('css')
 
    <link rel="stylesheet" href="/css/customers/change-password.css">
+   <style>
+    .login-form{
+    border: 1px solid black;
+    padding: 30px 40px;
+    border-radius: 5px;
+        }
+   </style>
+
 @endpush
 
 @push('js')

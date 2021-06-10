@@ -3,6 +3,7 @@
         <tr>
             <th>#</th>
             <th>Fullname</th>
+            <th>Date create</th>
 
             <th colspan="2">Status</th>
             <th colspan="3">Action</th>
@@ -14,6 +15,7 @@
                 <tr>
                     <td>{{ $key+1 }}</td>
                     <td>{{ $order->user->name }}</td>
+                    <td>{{ $order->created_at }}</td>
                     <td>
                         @if ($order->status == \App\Models\Order::STATUS[0])
                             <div class="alert alert-primary" role="alert">chưa thanh toán</div>

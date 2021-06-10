@@ -30,8 +30,9 @@
         </div>
       </div>
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
+      @if (auth()->guard('admin')->user()->role_id == 1)
+       <!-- Sidebar Menu -->
+       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
@@ -269,6 +270,53 @@
 
       </nav>
       <!-- /.sidebar-menu -->
+
+      @else
+
+       <!-- Sidebar Menu -->
+       <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          {{-- menu for home page --}}
+          <li class="nav-item {{ Route::currentRouteName() == 'admin.dashboard' ? 'menu-open' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Route::currentRouteName() == 'admin.dashboard' ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+
+          </li>
+
+          {{-- menu of order module --}}
+          @php
+            $routeOrderArr = [
+              'admin.order.index',
+              'admin.order.edit',
+              'admin.order.show',
+            ];
+          @endphp
+          <li class="nav-item {{ in_array(Route::currentRouteName(), $routeOrderArr) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Order
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.order.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.order.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List Order</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+      </nav>
+      <!-- /.sidebar-menu -->
+      @endif
 
       <form action="{{ route('admin.logout') }}" method="POST">
         @csrf

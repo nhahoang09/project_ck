@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use Illuminate\Http\Request;
+
 
 class CheckQuantityController extends Controller
 {
@@ -13,7 +13,7 @@ class CheckQuantityController extends Controller
         //// get quantity from Form Request
         $quantity = $request->quantity;
 
-        // get product fron Database
+        // get quantity from data
         $product = Product::findOrFail($id);
         $quantityDB = $product->quantity;
 

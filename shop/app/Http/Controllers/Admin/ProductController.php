@@ -92,6 +92,8 @@ class ProductController extends Controller
             'description' => $request->description,
             'quantity' => $request->quantity,
             'category_id' => $request->category_id,
+            'status'=> 1,
+            'is_feature'=>1,
         ];
         //dd($dataInsert);
         DB::beginTransaction();

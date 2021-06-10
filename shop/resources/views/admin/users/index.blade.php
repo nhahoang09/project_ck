@@ -37,9 +37,8 @@
                 <th>Email</th>
                 {{-- <th>Phone</th>
                 <th>Address</th> --}}
-                <th>Role_id</th>
-                <th>Status</th>
-                <th colspan="2">Active/De-active</th>
+                <th>Role Name</th>
+                <th colspan="2"> Active/De-active</th>
                 <th>Create Date</th>
 
                 <th colspan="3">Action</th>
@@ -52,14 +51,16 @@
                         <td>{{ $key+1 }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->role_id }}</td>
+                        <td>{{ $user->role->name }}</td>
                         <td>
-                            @if ($user->role_id == 2)
-                            <div class="alert alert-primary" role="alert">Shipper</div>
-                        @endif
+                            @if ($user->status == 0)
+                                <div class="alert alert-danger" role="alert">De-active</div>
+                            @elseif($user->status == 1)
+                                <div class="alert alert-success" role="alert">Active</div>
+                            @endif
                         </td>
-                        <td>{{ $user->status  }}</td>
-                        <td><a href="{{ route('admin.user.edit',$user->id) }}" class="btn btn-secondary">Active/De-active</a></td>
+                        {{-- <td>{{ $user->status  }}</td> --}}
+                        <td><a href="{{ route('admin.user.edit',$user->id) }}" class="btn btn-primary">Update</a></td>
                         <td>{{ $user->created_at }}</td>
 
                         <td>

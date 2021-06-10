@@ -20,9 +20,24 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
+    public function index(Request $request){
 
-        $orders=Order::with('user')->paginate(10);
+        // dd($request->status);
+
+        $orders=Order::with('user');
+        //search date
+        if(!empty($request->date)) {
+
+            $orders = $orders->whereDate('created_at','=',$request->date);
+        }
+        //search status
+        if(!empty($request->status)) {
+
+            $orders = $orders->where('status','=',$request->status);
+        }
+
+        $orders = $orders->paginate(10);
+        //dd($orders);
         return view('admin.orders.index',compact('orders'));
     }
 
@@ -62,9 +77,11 @@ class OrderController extends Controller
         ->join('products', 'order_details.product_id', '=', 'products.id')
         ->join('prices', 'order_details.price_id', '=', 'prices.id')
         //->join('promotions', 'order_details.promotion_id', '=', 'promotions.id')
-        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity')
-        ->get();
+        ->select('products.thumbnail','products.name',  'prices.price','order_details.quantity','order_details.promotion_id')
 
+        ->get();
+       // $promotion = OrderDetail::where('order_id','=',$id)->get();
+        //dd($promotion);
 
         //dd( $order_details);
         return view('admin.orders.detail',compact('order_details','total'));

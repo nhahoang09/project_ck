@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             <p><a href="{{ route('admin.product.price.create',$product->id) }}"><button class="btn btn-primary">Create</button></a></p>
-            
+
         </div>
     </div>
 
@@ -72,4 +72,7 @@
             @endif
         </tbody>
     </table>
+    <td>
+        <a href="{{ route('admin.product.index') }}" class="btn btn-primary">Back</a>
+    </td>
 @endsection

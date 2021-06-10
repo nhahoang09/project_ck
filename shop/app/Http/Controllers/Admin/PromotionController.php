@@ -8,6 +8,8 @@ use App\Models\Promotion;
 use App\Models\Product;
 use App\Models\ProductPromotion;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Admin\Promotion\StorePromotionRequest;
+use App\Http\Requests\Admin\Promotion\UpdatePromotionRequest;
 
 
 class PromotionController extends Controller
@@ -44,7 +46,7 @@ class PromotionController extends Controller
       * @param  \Illuminate\Http\Request  $request
       * @return \Illuminate\Http\Response
       */
-     public function store(Request $request)
+     public function store(StorePromotionRequest $request)
      {
         $dataPromotion = [
             'name'=>$request->name,
@@ -127,7 +129,7 @@ class PromotionController extends Controller
       * @param  int  $id
       * @return \Illuminate\Http\Response
       */
-     public function update(Request $request, $id)
+     public function update(UpdatePromotionRequest $request, $id)
      {
          $promotion= Promotion::find($id);
 

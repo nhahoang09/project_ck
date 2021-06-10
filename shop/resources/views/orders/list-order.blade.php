@@ -28,6 +28,7 @@
                     <tr>
                         <th class="product-name" >#</th>
                         <th class="product-name">Order ID</th>
+
                         <th class="product-price">Status</th>
                         <th class="product-quantity">Detail</th>
                         <th class="product-subtotal">Cancel</th>
@@ -38,20 +39,22 @@
                     <tr class="cart_item">
                         <td>{{ $key+1 }}</td>
                         <td>{{ $order->id }}</td>
+
                         <td>
                             @if ($order->status == 0)
                                 <div class="alert alert-danger" role="alert">chưa thanh toán</div>
                             @elseif ($order->status == 1)
                                 <div class="alert alert-danger" role="alert">đã thanh toán online</div>
                             @elseif ($order->status == 2)
-                                <div class="alert alert-danger" role="alert">đang đi giao hàng</div>
+                                <div class="alert alert-info" role="alert">đang đi giao hàng</div>
                             @elseif ($order->status == 3)
-                                <div class="alert alert-danger" role="alert">hủy đơn hàng</div>
+                                <div class="alert alert-warning" role="alert">hủy đơn hàng</div>
                             @else
                                 <div class="alert alert-success" role="alert">hoàn thành</div>
                             @endif
 
                         </td>
+
                         <td><a href="{{ route('order.order-detail',$order->id) }}" class="btn btn-info">Order Detail</a></td>
                         <td><a href="{{ route('order.cancel-order',$order->id) }}" class="btn btn-info">Cancel</a></td>
                     </tr>

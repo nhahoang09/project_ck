@@ -16,9 +16,9 @@ class CheckLoginAdmin
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
+    {   //
         // check login: if (Login is NotOK && routeName != ['admin.login', 'admin.login.handle']) then redirect to Login page
-        if (!Auth::guard('admin')->check() && !in_array(Route::currentRouteName(), ['admin.login', 'admin.login.handle'])) {
+        if (!Auth::guard('admin')->check() && !in_array(Route::currentRouteName(), ['admin.login', 'admin.login.handle','admin.register','admin.register.handle'])) {
             return redirect()->route('admin.login');
         }
 

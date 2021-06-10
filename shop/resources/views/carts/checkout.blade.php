@@ -18,7 +18,11 @@
     </div>
 </div>
 <section class="checkout">
+
     <form action="{{ route('cart.checkout-complete') }}" method="post"  id="frm-checkout">
+        @if(Session::has('error'))
+        <div class="alert alert-danger">{{ Session::get('error') }}</div>
+    @endif
         @csrf
         <div class="row">
             <div class="col-sm-6">

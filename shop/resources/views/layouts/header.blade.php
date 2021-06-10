@@ -33,7 +33,7 @@
                                        <a href="{{ route('order.list-order') }}"><button class="btn btn-dark"> Lịch sử mua hàng</button></a>
                                    </li>
                                    <li class="dropdown-item">
-                                       <a  href="{{ route('customer.profile')}}"><button class="btn btn-dark"> Cập nhật tài khoản</button></a>
+                                       <a  href="{{ route('customer.profile')}}"><button class="btn btn-dark"> Tài khoản</button></a>
                                    </li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf

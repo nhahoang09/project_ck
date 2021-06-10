@@ -12,6 +12,7 @@
 {{-- import file css (private) --}}
 @push('css')
     <link rel="stylesheet" href="/backend/css/products/product-create.css">
+
 @endpush
 
 {{-- import file js (private) --}}
@@ -20,6 +21,7 @@
 @endpush
 
 @section('content')
+
     <h4>Create Product</h4>
 
     @include('errors.error')
@@ -82,7 +84,7 @@
             @enderror
         </div>
 
-        
+
         {{-- <div class="form-group mb-5">
             <label for="">Product Price</label>
             <div class="border p-5">
@@ -121,4 +123,5 @@
             <button type="submit" class="btn btn-primary">Create</button>
         </div>
     </form>
+
 @endsection
