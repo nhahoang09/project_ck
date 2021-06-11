@@ -26,30 +26,37 @@ class CartController extends Controller
         //get data from SESSION
         $carts = empty(Session::get('carts')) ? [] : Session::get('carts');
         //dd($carts);
-
-        // validate ID of table product ? available TRUE | FALSE
-        // check quantity of products.quantity compare with order_detail.quantity
-        //$product = Product::findOrFail($id);
-        //dd($product);
-
-        #check have param $id ?
+        // trùng product
+        $quantity = $request->quantity;
+        if (!empty($carts)) {
+        foreach ($carts as $cart) {
+            if($cart['id'] == $id){
+                $newQuantity = $cart['quantity'];
+                $quantity += $newQuantity;
+            }
+            }
+        }
+       else{
+            $quantity = $request->quantity;
+        }
+       // dd( $quantityNew);
 
          //// get quantity from Form Request
-         $quantity = $request->quantity;
+        //  $quantity = $request->quantity;
 
          // get quantity from data
          $product = Product::findOrFail($id);
          $quantityDB = $product->quantity;
 
-         if ($quantity < $quantityDB) {
-            $newProduct = [
+         if ($quantity <= $quantityDB) {
+            $Product = [
                 'id' => $id,
-                'quantity' => $request->quantity,
+                'quantity' => $quantity,
                 'price_id' => $request->price_id,
                 'promotion_id' => $request->promotion_id
             ];
 
-            $carts[$id] = $newProduct;
+            $carts[$id] = $Product;
             // set data for SESSION
             session(['carts' => $carts]);
             //dd($carts);
@@ -107,7 +114,7 @@ class CartController extends Controller
                 $product = Product::findOrFail($key);
                 $quantityDB = $product->quantity;
                 // so sánh
-                if($qty<$quantityDB){
+                if($qty<=$quantityDB){
                     foreach ($carts as $id => $value) {
                         if ($value['id'] == $key) {
                             $carts[$id]['quantity'] = $qty;
@@ -167,11 +174,6 @@ class CartController extends Controller
         $carts = Session::get('carts');
         //dd( $carts);
 
-
-
-        // validate quanity of product -> Available (in-stock | out-stock)
-
-
         // create data to save into table orders
         $dataOrder = [
             'user_id' => Auth()->id(),
@@ -207,8 +209,18 @@ class CartController extends Controller
                     //dd( $orderDetail);
                     // save data into table order_details
                     OrderDetail::create($orderDetail);
+
+
+                    // $product = Product::findOrFail($orderId);
+                    // $quantityDB = $product->quantity;
+                    // $quantity_re = $quantityDB-$quantity;
+                    // $product->quantity= $quantity_re;
+                    // $product->save();
+
                 }
+
             }
+            //
             DB::commit();
 
             // remove session carts

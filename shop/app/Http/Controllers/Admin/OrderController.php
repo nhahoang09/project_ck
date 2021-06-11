@@ -22,9 +22,16 @@ class OrderController extends Controller
      */
     public function index(Request $request){
 
-        // dd($request->status);
+        //dd($request->status);
 
         $orders=Order::with('user');
+
+        // if(!empty($request->status== 0)) {
+
+        //     $orders = $orders->whereDate('status',0);
+        // }
+
+        //dd($orders);
         //search date
         if(!empty($request->date)) {
 
@@ -33,10 +40,13 @@ class OrderController extends Controller
         //search status
         if(!empty($request->status)) {
 
-            $orders = $orders->where('status','=',$request->status);
+            $orders = $orders->where('status',$request->status);
         }
 
         $orders = $orders->paginate(10);
+
+
+
         //dd($orders);
         return view('admin.orders.index',compact('orders'));
     }

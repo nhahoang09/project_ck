@@ -29,8 +29,7 @@ class StoreProductRequest extends FormRequest
             'description'=>'required|min:10',
             'thumbnail'=>'required',
             'quantity'=>'required|numeric',
-            'status'=>'required',
-            'is_feature'=>'required',
+
             'category_id'=>'required',
         ];
     }

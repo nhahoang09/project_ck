@@ -67,19 +67,19 @@
                             @endphp
                             {{ number_format($money) .' VNĐ'  }}
                         </td>
-                        <td>
-
-                        </td>
 
                     </tr>
                 @endforeach
             @endif
         </tbody>
     </table>
+    <div class="text-right">
+        <h4>Total: {{ number_format($total) .' VNĐ'  }}</h4>
+    </div>
     <a href="{{ route('admin.order.index') }}" class="btn btn-secondary">Back</a>
 
 
-    <div class="cart-totals-row"><span> Total:</span> <span> {{ number_format($total) .' VNĐ'  }}</span></div>
+    {{-- <div class="cart-totals-row"><span> Total:</span> <span> {{ number_format($total) .' VNĐ'  }}</span></div> --}}
 
 
 

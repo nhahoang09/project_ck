@@ -138,6 +138,8 @@ class CategoryController extends Controller
 
         try {
             $category = Category::find($id);
+            //dd($category);
+
             $category->delete();
 
             DB::commit();
